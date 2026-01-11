@@ -99,5 +99,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ---
 
 <p align="center">
-  Generated with ❤️ by the Advanced Agentic Coding Team
+  Generated with ❤️ by Victor Kane
 </p>

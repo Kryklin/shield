@@ -1,0 +1,93 @@
+<div class="hardening-container fade-in">
+  <div class="header">
+    <mat-icon class="header-icon">security</mat-icon>
+    <h1>System Hardening</h1>
+    <p class="subtitle">Reduce attack surface by disabling vulnerable features.</p>
+  </div>
+
+  <!-- Profile Section -->
+  <div class="glass-panel profile-card">
+    <div class="profile-header">
+        <mat-icon>manage_accounts</mat-icon>
+        <h3>Active Profile</h3>
+    </div>
+    
+    <div class="profiles-row">
+        @if (!isCreating) {
+            <mat-form-field appearance="outline" class="profile-select">
+                <mat-label>Select Security Profile</mat-label>
+                <mat-select [(ngModel)]="selectedProfileId" (selectionChange)="applyProfile()">
+                    @for (profile of hardeningService.profiles(); track profile.id) {
+                        <mat-option [value]="profile.id">
+                            {{ profile.name }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            
+            <button mat-mini-fab color="primary" class="add-btn" (click)="toggleCreateMode()" matTooltip="Save Current Settings as Profile">
+                <mat-icon>add</mat-icon>
+            </button>
+        } @else {
+            <div class="create-profile-form">
+                <mat-form-field appearance="outline" class="new-name-input">
+                    <mat-label>New Profile Name</mat-label>
+                    <input matInput [(ngModel)]="newProfileName" (keyup.enter)="saveProfile()" placeholder="e.g. Custom Gaming">
+                </mat-form-field>
+                
+                <button mat-icon-button color="primary" (click)="saveProfile()" [disabled]="!newProfileName">
+                    <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="toggleCreateMode()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        }
+    </div>
+  </div>
+  
+  <!-- Module List -->
+  <div class="modules-list">
+    @for (module of hardeningService.modules(); track module.id) {
+      <div class="module-row" [class.enabled]="module.state?.enabled" [id]="module.id">
+        <div class="module-info-container">
+            <div class="module-header">
+                <div class="module-icon">
+                    <mat-icon [class.safe]="module.state?.status === 'Safe'" 
+                              [class.risk]="module.state?.status === 'At Risk'">
+                        {{ module.state?.status === 'Safe' ? 'check_circle' : 'warning' }}
+                    </mat-icon>
+                </div>
+                <div class="title-section">
+                    <h3>{{ module.name }}</h3>
+                    <span class="status-badge" [class.safe]="module.state?.status === 'Safe'" [class.risk]="module.state?.status === 'At Risk'">
+                        {{ module.state?.status === 'Safe' ? 'SECURE' : 'AT RISK' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="module-details">
+                <p class="description">{{ module.description }}</p>
+                <div class="impact-section">
+                    <span class="impact-label">Impact:</span>
+                    <span class="impact-text" [innerHTML]="module.extendedDescription"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-action">
+          @if (module.isProcessing || module.loading) {
+            <mat-spinner diameter="24"></mat-spinner>
+          } @else {
+            <mat-slide-toggle 
+              [checked]="module.state?.enabled"
+              (change)="hardeningService.toggleModule(module.id, $event.checked)"
+              [color]="module.state?.enabled ? 'primary' : 'warn'"
+              matTooltip="Toggle Feature">
+            </mat-slide-toggle>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

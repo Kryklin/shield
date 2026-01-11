@@ -1,1 +1,70 @@
-/* You can add global styles to this file, and also import other style files */
+@use './app/styles/themes';
+@use './app/styles/glass' as ui-glass;
+@use '@angular/material' as mat;
+
+// Include theming for Angular Material with `mat.theme()`.
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: dark, // Enforce dark mode globally
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+html, body { height: 100%; }
+
+body {
+  color-scheme: dark; // Strict enforcement
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  // Stealth Black Background
+  // Stealth Void Background (Animated for Glass Effect)
+  background: linear-gradient(-45deg, 
+    #000000, 
+    #1a1a1a, 
+    #0d0d0d, 
+    #141414
+  );
+  background-size: 400% 400%;
+  animation: drift 15s ease infinite;
+
+  // Smooth Theme Transitions
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+// Global Glass Class
+.glass-panel {
+  // Use mixin directly to avoid cross-module extend issues
+  @extend %glass-panel;
+}
+
+// Material Overrides for Glassmorphism
+.glass-dialog-panel {
+    .mat-mdc-dialog-container {
+        // Transparent container to let our component handle the glass
+        background: transparent !important; 
+        box-shadow: none !important;
+        border: none !important;
+        
+        .mdc-dialog__surface {
+            background: rgba(30, 30, 30, 0.85) !important; // Dark glass
+            backdrop-filter: blur(20px) !important;
+            border-radius: 16px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+            overflow: hidden !important;
+            padding: 0 !important;
+        }
+    }
+}
+
+.glass-dialog-backdrop {
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
+}

@@ -1,0 +1,160 @@
+<div class="dashboard-container fade-in">
+  
+  <!-- Hero Section: Threat Level & Score -->
+  <!-- Threat Intelligence Card (Animated Hero) -->
+  <div class="hero-card glass-panel" [routerLink]="['/hardening']" matTooltip="Access Global Hardening">
+    <!-- Animated Background Elements -->
+    <div class="scan-line"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="hero-content">
+        <!-- Integrity Visual (Left) -->
+        <div class="integrity-visual">
+             <div class="outer-ring"></div>
+             <div class="inner-ring" [style.border-color]="threatLevel().color"></div>
+             <div class="core-data">
+                 <div class="score" [style.color]="threatLevel().color">{{ integrityScore() }}%</div>
+                 <div class="label">SYSTEM INTEGRITY</div>
+             </div>
+        </div>
+
+        <!-- Threat Intel (Right) -->
+        <div class="threat-intel">
+             <div class="status-badge" [style.background]="threatLevel().color + '20'" [style.color]="threatLevel().color">
+                 <div class="status-dot" [style.background]="threatLevel().color"></div>
+                 {{ threatLevel().name }}
+             </div>
+             
+             <h1 class="threat-desc">{{ threatLevel().desc }}</h1>
+             
+             <!-- Mini Stats Bar -->
+             <div class="mini-stats">
+                 <div class="stat-item">
+                     <span class="val">{{ secureHardening() }}</span>
+                     <span class="lbl">HARDENED</span>
+                 </div>
+                 <div class="divider"></div>
+                 <div class="stat-item">
+                     <span class="val">{{ optimizedDebloat() }}</span>
+                     <span class="lbl">OPTIMIZED</span>
+                 </div>
+                 <div class="divider"></div>
+                 <div class="stat-item">
+                     @if (system.info(); as sys) {
+                        <span class="val">{{ sys.Uptime }}</span>
+                     } @else {
+                        <span class="val">--:--:--</span>
+                     }
+                     <span class="lbl">UPTIME</span>
+                 </div>
+             </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- System Specifications (Feature Card) -->
+  <div class="glass-panel specs-card">
+    <div class="card-header">
+         <mat-icon>memory</mat-icon>
+         <h3>System Specifications</h3>
+    </div>
+    
+    @if (system.info(); as sys) {
+        <div class="specs-grid">
+            <div class="spec-item">
+                <span class="label">OPERATING SYSTEM</span>
+                <span class="value">{{ sys.OS }} (Build {{ sys.OSBuild }})</span>
+            </div>
+            
+            <div class="spec-item">
+                <span class="label">MEMORY</span>
+                <span class="value">{{ sys.RAM }}</span>
+            </div>
+
+            <div class="spec-item">
+                <span class="label">PROCESSOR</span>
+                <span class="value">{{ sys.CPU }}</span>
+            </div>
+
+            <div class="spec-item">
+                <span class="label">GRAPHICS</span>
+                <span class="value">{{ sys.GPU }} ({{ sys.Display || 'N/A' }})</span>
+            </div>
+
+            <div class="spec-item">
+                <span class="label">BIOS</span>
+                <span class="value">{{ sys.BIOS }}</span>
+            </div>
+
+            <div class="spec-item">
+                <span class="label">MOTHERBOARD</span>
+                <span class="value">{{ sys.Motherboard }}</span>
+            </div>
+        </div>
+    } @else {
+        <div class="loading-state">
+             <mat-spinner diameter="32"></mat-spinner>
+             <span>Gathering Intelligence...</span>
+        </div>
+    }
+  </div>
+
+  <!-- Widget Grid -->
+  <div class="widget-grid">
+     
+     <!-- Update Service -->
+     <div class="glass-panel widget-card" [routerLink]="['/updates']">
+        <div class="widget-header">
+            <mat-icon>system_update</mat-icon>
+            <h3>Updates</h3>
+        </div>
+        @if (update.status(); as st) {
+            <div class="widget-value" [class.frozen]="st.startType === 'Disabled'">
+                {{ st.startType === 'Disabled' ? 'FROZEN' : 'ACTIVE' }}
+            </div>
+            <div class="widget-sub">{{ st.driversExcluded ? 'Drivers Blocked' : 'Drivers Allowed' }}</div>
+        } @else {
+            <div class="widget-value">---</div>
+        }
+     </div>
+
+     <!-- Startup Monitor -->
+     <div class="glass-panel widget-card" [routerLink]="['/startup']">
+        <div class="widget-header">
+            <mat-icon>rocket_launch</mat-icon>
+            <h3>Startup</h3>
+        </div>
+        <div class="widget-value">{{ startupCount() }}</div>
+        <div class="widget-sub">Apps Launching</div>
+     </div>
+
+     <!-- Storage Monitor -->
+     <div class="glass-panel widget-card" [routerLink]="['/storage']">
+        <div class="widget-header">
+            <mat-icon>storage</mat-icon>
+            <h3>Storage</h3>
+        </div>
+        @if (storage.drives().length > 0) {
+            <div class="widget-value">{{ storage.drives()[0].percentFree }}%</div>
+            <div class="widget-sub">Free (C:)</div>
+        } @else {
+            <div class="widget-value">---</div>
+        }
+     </div>
+     
+     <!-- Battery (if Laptop) -->
+     @if (system.info()?.IsLaptop) {
+         <div class="glass-panel widget-card battery-card">
+            <div class="widget-header">
+                <mat-icon>battery_full</mat-icon>
+                <h3>Power</h3>
+            </div>
+            <!-- Simple Battery display assumed available via system info later or future widget -->
+            <!-- For now, just show status since we removed detailed battery logic -->
+            <div class="widget-value">MOBILE</div>
+            <div class="widget-sub">Running on Battery</div>
+         </div>
+     }
+  </div>
+
+</div>

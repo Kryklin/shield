@@ -1,0 +1,131 @@
+<div class="battery-container fade-in">
+  <div class="header">
+    <mat-icon class="header-icon">battery_charging_full</mat-icon>
+    <h1>Power Management</h1>
+    <p class="subtitle">Monitor health and optimize power consumption.</p>
+  </div>
+
+  @if (battery.status(); as status) {
+    <div class="dashboard-grid">
+      <!-- Status Card -->
+      <div class="glass-panel status-card">
+        <div class="ring-container">
+           <!-- Simple visual representation -->
+           <div class="ring" [style.border-color]="getBatteryColor(status.percentage)">
+             <span class="value">{{ status.percentage }}%</span>
+             <span class="label">CHARGE</span>
+           </div>
+        </div>
+        <div class="stats">
+           <div class="stat-row">
+             <mat-icon>{{ status.isCharging ? 'bolt' : 'timelapse' }}</mat-icon>
+             <span>{{ status.isCharging ? 'Charging' : (status.runtime > 0 ? (status.runtime + ' min remaining') : 'On Battery') }}</span>
+           </div>
+        </div>
+      </div>
+
+      <!-- Power Plans -->
+      <div class="glass-panel plans-card">
+        <div class="card-header-row">
+          <h3>Power Plans</h3>
+          <div class="actions">
+              <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none" accept=".pow">
+              <button mat-icon-button (click)="fileInput.click()" matTooltip="Import Power Plan (.pow)">
+                <mat-icon>upload_file</mat-icon>
+              </button>
+              <button mat-icon-button (click)="battery.unlockUltimatePlan()" matTooltip="Unlock Ultimate Performance Plan">
+                <mat-icon>speed</mat-icon>
+              </button>
+          </div>
+        </div>
+        
+        <div class="plans-list">
+          @for (plan of status.plans; track plan.id) {
+            <div class="plan-row" 
+                 [class.active]="plan.active" 
+                 (click)="setPlan(plan.id)" 
+                 (keydown.enter)="setPlan(plan.id)"
+                 tabindex="0"
+                 role="button">
+               <div class="plan-info">
+                 <div class="plan-name">{{ plan.name }}</div>
+                 <div class="plan-desc">
+                    {{ plan.active ? 'Active Plan' : 'Click to Activate' }}
+                 </div>
+               </div>
+               @if (plan.active) {
+                 <mat-icon class="check">check_circle</mat-icon>
+               }
+            </div>
+          }
+        </div>
+      </div>
+
+       <!-- Detailed Health Stats -->
+       @if (battery.health(); as health) {
+        <div class="glass-panel health-card full-width">
+            <h3>Battery Health Analysis</h3>
+            
+            <div class="health-grid">
+                <!-- Critical Metrics -->
+                <div class="health-item big">
+                    <span class="bad-val">{{ health.wearLevel }}%</span>
+                    <span class="label">WEAR LEVEL</span>
+                </div>
+                <div class="health-item big">
+                    <span class="val">{{ health.cycleCount }}</span>
+                    <span class="label">CYCLE COUNT</span>
+                </div>
+                
+                <!-- Capacity -->
+                <div class="health-item">
+                    <span class="val">{{ health.fullChargeCapacity }} mWh</span>
+                    <span class="label">CURRENT CAPACITY</span>
+                </div>
+                <div class="health-item">
+                    <span class="val">{{ health.designCapacity }} mWh</span>
+                    <span class="label">DESIGN CAPACITY</span>
+                </div>
+
+                <!-- Hardware Specs -->
+                <div class="health-item">
+                    <span class="val text-sm">{{ health.manufacturer }}</span>
+                    <span class="label">MANUFACTURER</span>
+                </div>
+                <div class="health-item">
+                    <span class="val text-sm">{{ health.serialNumber }}</span>
+                    <span class="label">SERIAL NUMBER</span>
+                </div>
+                <div class="health-item">
+                    <span class="val text-sm">{{ health.chemistry }}</span>
+                    <span class="label">CHEMISTRY</span>
+                </div>
+                <div class="health-item">
+                    <span class="val text-sm">{{ health.success ? 'Validated' : 'Error' }}</span>
+                    <span class="label">DATA INTEGRITY</span>
+                </div>
+            </div>
+            
+            <!-- Wear Bar -->
+            <div class="wear-bar-container">
+                <div class="bar-bg">
+                    <div class="bar-fill" [style.width.%]="100 - (+health.wearLevel)"
+                         [style.background]="getBatteryColor(100 - (+health.wearLevel))"></div>
+                </div>
+                <div class="bar-labels">
+                    <span>0% Wear</span>
+                    <span>100% Capacity</span>
+                </div>
+            </div>
+        </div>
+
+
+      }
+    </div>
+  } @else {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Analyzing Power Subsystems...</p>
+    </div>
+  }
+</div>

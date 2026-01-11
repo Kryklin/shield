@@ -1,0 +1,39 @@
+<mat-sidenav-container class="sidenav-container" hasBackdrop="false">
+  <mat-sidenav #drawer class="sidenav" mode="side" opened="true">
+    <div class="sidenav-logo-container" style="display: flex; justify-content: center; padding: 32px 0;">
+        <app-logo size="120px"></app-logo>
+    </div>
+    <mat-nav-list>
+      <!-- Dashboard is always top-level -->
+      <a mat-list-item class="dashboard-item" routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+
+      <mat-accordion displayMode="flat" multi>
+        @for (group of navGroups(); track group.title) {
+          <mat-expansion-panel [expanded]="group.expanded" class="nav-group-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>{{ group.icon }}</mat-icon>
+                <span>{{ group.title }}</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="nav-group-items">
+              @for (item of group.items; track item.route) {
+                <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link">
+                  <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+                  <span matListItemTitle>{{ item.title }}</span>
+                </a>
+              }
+            </div>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

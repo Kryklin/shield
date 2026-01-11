@@ -1,0 +1,27 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <mat-icon [color]="data.color || 'primary'">{{ data.icon || 'info' }}</mat-icon>
+        <h2 mat-dialog-title>{{ data.title }}</h2>
+    </div>
+
+    <div mat-dialog-content class="dialog-content">
+        <p class="message">{{ data.message }}</p>
+
+        @if (data.type === 'prompt') {
+            <mat-form-field appearance="outline" class="prompt-input">
+                <mat-label>{{ data.inputLabel || 'Enter value' }}</mat-label>
+                <input matInput [(ngModel)]="inputResult" [placeholder]="data.inputPlaceholder || ''" (keyup.enter)="onConfirm()" cdkFocusInitial>
+            </mat-form-field>
+        }
+    </div>
+
+    <div mat-dialog-actions align="end" class="dialog-actions">
+        @if (data.type !== 'alert') {
+            <button mat-button (click)="onCancel()">{{ data.cancelText || 'Cancel' }}</button>
+        }
+        
+        <button mat-flat-button [color]="data.color || 'primary'" (click)="onConfirm()" cdkFocusInitial>
+            {{ data.okText || 'OK' }}
+        </button>
+    </div>
+</div>

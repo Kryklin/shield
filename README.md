@@ -1,59 +1,103 @@
-# Shield
+# S.H.I.E.L.D. — System Hardening Interface for Enhanced Logical Defense
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
+<div align="center">
 
-## Development server
+![S.H.I.E.L.D. Logo](https://img.shields.io/badge/S.H.I.E.L.D.-System_Hardening_Interface-blue?style=for-the-badge&logo=shieldui&logoColor=white)
+![Version](https://img.shields.io/badge/Version-0.0.5-orange?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Work_In_Progress-yellow?style=for-the-badge)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 
-To start a local development server, run:
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.io/)
+[![Electron](https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://microsoft.com/powershell)
 
-```bash
-ng serve
-```
+</div>
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+> [!WARNING]
+> **WORK IN PROGRESS**: This project is currently in active development (Alpha v0.0.5). Features may change, and stability is not guaranteed. Use with caution in production environments.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🛡️ Overview
 
-```bash
-ng generate component component-name
-```
+**S.H.I.E.L.D.** (System Hardening Interface for Enhanced Logical Defense) is a high-performance Windows security hardening and system optimization suite. Built using the deep system integration of **PowerShell** and the modern desktop experience of **Electron**, S.H.I.E.L.D. provides a "Lockdown-as-a-Service" interface to fully secure any Windows environment.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Featuring a **fluid glassmorphism UI**, it transforms complex security configurations into a seamless, premium interactive experience, making enterprise-grade security accessible and visually stunning.
 
-```bash
-ng generate --help
-```
+## ✨ Key Features
 
-## Building
+- **🔒 Ultimate Hardening**: One-click lockdown of security vulnerabilities, registry hardening, and firewall optimization.
+- **🧹 System Decluttering**: Remove telemetry, bloatware, and unnecessary background services to reclaim system performance.
+- **💻 PowerShell Integration**: Deep hooks into Windows management instrumentation (WMI) and system policies for granular control.
+- **💎 Glassmorphism UI**: A stunning, modern interface with real-time blur/frost effects, fluid transitions, and a dark-mode-first aesthetic.
+- **⚡ Real-time Telemetry**: Live monitoring of system security score and threat status.
 
-To build the project run:
+## 🛠️ Architecture
 
-```bash
-ng build
-```
+S.H.I.E.L.D. leverages a robust multi-process architecture for maximum stability and security:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| Component | Description |
+|-----------|-------------|
+| **Frontend** | Angular-based SPA with premium CSS glassmorphism and signals-based state management. |
+| **Desktop Wrapper** | Electron for secure cross-process communication (IPC) and native shell access. |
+| **Policy Orchestrator** | PowerShell scripts for orchestrating complex Windows system changes safely and effectively. |
 
-## Running unit tests
+## 🚀 Getting Started
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Prerequisites
 
-```bash
-ng test
-```
+- **OS**: Windows 10/11 (Administrator privileges required for hardening features)
+- **Node.js**: v18+ (for development)
+- **PowerShell**: v5.1+
 
-## Running end-to-end tests
+### Installation
 
-For end-to-end (e2e) testing, run:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-repo/shield.git
+   cd shield
+   ```
 
-```bash
-ng e2e
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+3. **Run in development mode**
+   ```bash
+   npm run start
+   ```
 
-## Additional Resources
+4. **Build for production**
+   ```bash
+   npm run make
+   ```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🎨 UI Design Philosophy
+
+S.H.I.E.L.D. is designed to be more than just a utility; it's an experience.
+
+- **Glassmorphism**: Layered depth with backdrop-filter blur effects to create a sense of hierarchy.
+- **Micro-animations**: Subtle feedback for every user interaction to make the app feel alive.
+- **Dark Mode First**: Optimized for security professionals and power users working in low-light environments.
+
+## 🤝 Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+Please read our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## 📞 Contact
+
+**Victor Kane** - [Project Link](https://github.com/your-repo/shield)
+
+---
+
+<p align="center">
+  Generated with ❤️ by the Advanced Agentic Coding Team
+</p>

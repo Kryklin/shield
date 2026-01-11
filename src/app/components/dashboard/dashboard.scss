@@ -1,0 +1,299 @@
+@use '../../styles/glass';
+
+.dashboard-container {
+  padding: 24px 48px 24px 48px;
+  height: calc(100vh - 140px);
+  box-sizing: border-box;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
+
+// Threat Intelligence Card (Hero)
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  padding: 40px 60px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s ease;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+
+  // Hover Effect
+  &:hover {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      
+      .outer-ring { border-color: rgba(255,255,255,0.2); }
+  }
+
+  // Scanning Animation
+  .scan-line {
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      transform: skewX(-20deg);
+      animation: scan 6s linear infinite;
+      pointer-events: none;
+  }
+  
+  // Subtle Grid Overlay
+  .grid-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.3;
+      pointer-events: none;
+  }
+
+  .hero-content {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      width: 100%;
+      z-index: 2; // Above scan line
+  }
+
+  // Integrity Visual (Left)
+  .integrity-visual {
+      position: relative;
+      width: 180px; height: 180px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+
+      .outer-ring {
+          position: absolute;
+          width: 100%; height: 100%;
+          border-radius: 50%;
+          border: 2px dashed rgba(255,255,255,0.1);
+          animation: spin 20s linear infinite;
+      }
+
+      .inner-ring {
+          position: absolute;
+          width: 80%; height: 80%;
+          border-radius: 50%;
+          border: 4px solid; // Color set by binding
+          border-left-color: transparent !important;
+          border-bottom-color: transparent !important;
+          opacity: 0.8;
+          transform: rotate(-45deg);
+          box-shadow: 0 0 20px currentColor;
+          transition: border-color 0.5s;
+      }
+
+      .core-data {
+          text-align: center;
+          .score { font-size: 3rem; font-weight: 200; line-height: 1; text-shadow: 0 0 20px currentColor; margin-bottom: 4px; }
+          .label { font-size: 0.6rem; letter-spacing: 2px; opacity: 0.6; font-weight: 700; }
+      }
+  }
+
+  // Threat Intel (Right)
+  .threat-intel {
+      flex: 1;
+      
+      .status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 16px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 1px;
+          margin-bottom: 16px;
+          text-transform: uppercase;
+          
+          .status-dot {
+              width: 8px; height: 8px;
+              border-radius: 50%;
+              animation: pulse 2s infinite;
+          }
+      }
+
+      .threat-desc {
+          font-size: 1.8rem;
+          font-weight: 300;
+          margin: 0 0 32px 0;
+          line-height: 1.2;
+          color: rgba(255,255,255,0.9);
+          max-width: 800px;
+      }
+
+      .mini-stats {
+          display: flex;
+          align-items: center;
+          gap: 32px;
+          
+          .stat-item {
+              display: flex; flex-direction: column;
+              .val { font-size: 1.25rem; font-weight: 500; color: white; line-height: 1; margin-bottom: 4px; }
+              .lbl { font-size: 0.7rem; letter-spacing: 1px; color: rgba(255,255,255,0.4); font-weight: 700; }
+          }
+          
+          .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); }
+      }
+  }
+}
+
+// Keyframes
+@keyframes scan {
+  0% { left: -100%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { left: 200%; opacity: 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+// System Specs Card
+.specs-card {
+    @extend %glass-panel;
+    padding: 32px 40px;
+    margin-bottom: 16px; 
+    flex-shrink: 0;
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        color: var(--mat-sys-tertiary);
+        opacity: 0.8;
+        
+        mat-icon { font-size: 24px; width: 24px; height: 24px; }
+        h3 { margin: 0; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+    }
+
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px 64px;
+
+        .spec-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .label { 
+                font-size: 0.7rem; 
+                color: rgba(255,255,255,0.3); 
+                letter-spacing: 1px; 
+                font-weight: 700; 
+                text-transform: uppercase;
+            }
+            .value { 
+                font-size: 1.1rem; 
+                color: rgba(255,255,255,0.9); 
+                font-weight: 400; 
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .loading-state {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        opacity: 0.7;
+    }
+}
+
+// Widget Grid
+.widget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    flex: 1; // Fill remaining space
+    min-height: 0; // Allow shrinking
+    overflow-y: auto; // Scroll if needed
+    padding-bottom: 8px; // Padding for scrollbar
+        
+    // Custom Scrollbar
+    &::-webkit-scrollbar { width: 0; } // Hidden scrollbar for cleanliness
+
+    .widget-card {
+        @extend %glass-panel;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 140px;
+        transition: transform 0.2s ease, background 0.2s;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.05);
+
+        &:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            
+            mat-icon { 
+                color: rgba(255,255,255,0.3); // Dim icon
+                &.secure { color: #00e676; opacity: 0.8; }
+                &.risk { color: #ff1744; opacity: 0.8; }
+            }
+            h3 { margin: 0; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+        }
+
+        .widget-value {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 4px;
+
+            &.frozen { color: #2979ff; }
+        }
+
+        .widget-sub {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        &.battery-card {
+            .widget-header mat-icon { color: #00e676; } // Green battery
+        }
+    }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Responsive
+@media (max-width: 1100px) {
+    .specs-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}

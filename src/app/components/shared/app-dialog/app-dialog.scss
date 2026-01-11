@@ -1,0 +1,44 @@
+@use '../../../styles/glass';
+
+.dialog-container {
+    padding: 24px;
+    background: #1a1a1a; // Fallback
+    background: rgba(20, 20, 20, 0.95);
+    color: white;
+    min-width: 350px;
+    max-width: 500px;
+    
+    // Glassmorphism background is handled by the panelClass in service
+    
+    .dialog-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        
+        mat-icon { font-size: 28px; width: 28px; height: 28px; }
+        h2 { margin: 0; font-size: 1.25rem; font-weight: 500; letter-spacing: 0.5px; }
+    }
+
+    .dialog-content {
+        margin-bottom: 24px;
+        padding: 0; // Reset material padding
+        
+        .message {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.7);
+            margin: 0 0 16px 0;
+        }
+
+        .prompt-input {
+            width: 100%;
+        }
+    }
+
+    .dialog-actions {
+        margin: 0;
+        padding: 0;
+        gap: 8px;
+    }
+}

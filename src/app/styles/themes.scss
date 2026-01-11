@@ -1,0 +1,26 @@
+@use '@angular/material' as mat;
+@use './generated/midnight-slate';
+
+@mixin apply-theme($primary, $tertiary) {
+  $theme: mat.define-theme((
+    color: (
+      theme-type: dark,
+      primary: $primary,
+      tertiary: $tertiary,
+    ),
+    typography: (
+      plain-family: 'Roboto, sans-serif',
+      brand-family: 'Roboto, sans-serif',
+    ),
+    density: (
+      scale: 0
+    )
+  ));
+  
+  @include mat.all-component-themes($theme);
+}
+
+// Enforce Void (Midnight Slate base) as the only theme
+html {
+  @include apply-theme(midnight-slate.$primary-palette, midnight-slate.$tertiary-palette);
+}

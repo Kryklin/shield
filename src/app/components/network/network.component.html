@@ -1,0 +1,125 @@
+<div class="network-container fade-in">
+  <div class="header">
+    <mat-icon class="header-icon">dns</mat-icon>
+    <h1>Network Command Center</h1>
+    <p class="subtitle">Manage adapters, secure DNS, and troubleshoot connectivity.</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Gateway Status -->
+    @if (network.gateway(); as gw) {
+        <div class="glass-panel gateway-card full-width">
+            <div class="gw-stat">
+                <mat-icon>public</mat-icon>
+                <div class="gw-info">
+                    <span class="label">PUBLIC IP</span>
+                    <span class="val">{{ gw.ip }}</span>
+                </div>
+            </div>
+            <div class="gw-stat">
+                <mat-icon>{{ gw.latency < 50 ? 'network_check' : 'wifi_tethering_error' }}</mat-icon>
+                <div class="gw-info">
+                    <span class="label">LATENCY (1.1.1.1)</span>
+                    <span class="val" [class.slow]="gw.latency > 100">{{ gw.latency === -1 ? 'Timeout' : gw.latency + ' ms' }}</span>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Active Adapters -->
+    @for (nic of network.adapters(); track nic.index) {
+        <div class="glass-panel adapter-card">
+            <div class="adapter-header">
+                <mat-icon class="nic-icon">lan</mat-icon>
+                <div class="nic-info">
+                    <h3>{{ nic.name }}</h3>
+                    <span class="desc">{{ nic.description }}</span>
+                </div>
+                <div class="status-badge">
+                    <div class="dot"></div>
+                    {{ nic.status }}
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat">
+                    <span class="label">IP ADDRESS</span>
+                    <div class="val">{{ nic.ip }}</div>
+                </div>
+                <div class="stat">
+                    <span class="label">LINK SPEED</span>
+                    <div class="val">{{ nic.linkSpeed }}</div>
+                </div>
+                <div class="stat">
+                    <span class="label">DOWNLOAD</span>
+                    <div class="val">{{ formatBytes(nic.bytesReceived) }}</div>
+                </div>
+                <div class="stat">
+                    <span class="label">UPLOAD</span>
+                    <div class="val">{{ formatBytes(nic.bytesSent) }}</div>
+                </div>
+            </div>
+
+            <div class="dns-section">
+                <h4>DNS Configuration</h4>
+                <div class="current-dns">
+                    <mat-icon>security</mat-icon>
+                    <span>Current: {{ nic.dns }}</span>
+                </div>
+                
+                <div class="dns-actions">
+                    <button mat-button [matMenuTriggerFor]="dnsMenu">
+                        <mat-icon>arrow_drop_down</mat-icon>
+                        Apply Preset
+                    </button>
+                    <mat-menu #dnsMenu="matMenu">
+                        @for (preset of network.presets; track preset.name) {
+                            <button mat-menu-item (click)="applyDNS(nic.index, preset)">
+                                <span>{{ preset.name }}</span>
+                                <span class="menu-sub">{{ preset.primary }}</span>
+                            </button>
+                        }
+                    </mat-menu>
+                    
+                    <button mat-button color="accent" [matMenuTriggerFor]="macMenu">
+                        <mat-icon>fingerprint</mat-icon>
+                        MAC Identity
+                    </button>
+                    <mat-menu #macMenu="matMenu">
+                        <button mat-menu-item (click)="randomizeMac(nic.index)">
+                            <mat-icon>shuffle</mat-icon>
+                            <span>Randomize MAC</span>
+                        </button>
+                        <button mat-menu-item (click)="resetMac(nic.index)">
+                            <mat-icon>restore</mat-icon>
+                            <span>Reset to Factory</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Repair Zone -->
+
+    <!-- AdBlock Zone -->
+    <div class="glass-panel repair-card full-width" style="margin-top: 20px;">
+        <div class="repair-content">
+            <div class="repair-text">
+                <h3>System-Wide AdBlock (Hosts)</h3>
+                <p>Block ads, trackers, and malicious sites across ALL applications using the StevenBlack hosts file.</p>
+            </div>
+            <div class="hosts-actions">
+                <button mat-flat-button color="primary" (click)="blockAds()">
+                    <mat-icon>shield</mat-icon>
+                    ENABLE ADBLOCK
+                </button>
+                <button mat-stroked-button (click)="resetHosts()">
+                    <mat-icon>restart_alt</mat-icon>
+                    RESET DEFAULT
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

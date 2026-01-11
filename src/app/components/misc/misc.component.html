@@ -1,0 +1,30 @@
+<div class="misc-container fade-in">
+  <div class="header">
+    <mat-icon class="header-icon">tune</mat-icon>
+    <h1>System Utilities & Tweaks</h1>
+    <p class="subtitle">Customize Windows behavior and legacy settings.</p>
+  </div>
+
+  <div class="glass-panel modules-list">
+    @for (module of miscService.modules(); track module.id) {
+      <div class="module-row" [class.enabled]="module.state?.enabled">
+        <div class="module-info">
+          <h3>{{ module.name }}</h3>
+          <p>{{ module.description }}</p>
+        </div>
+        
+        <div class="module-action">
+          @if (module.isProcessing || module.loading) {
+            <mat-spinner diameter="24"></mat-spinner>
+          } @else {
+            <mat-slide-toggle 
+              [checked]="module.state?.enabled"
+              (change)="toggle(module.id, $event.checked)"
+              color="accent">
+            </mat-slide-toggle>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

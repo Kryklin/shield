@@ -1,0 +1,15 @@
+<div class="topnav">
+  <div class="drag-region">
+    <app-logo size="32px"></app-logo>
+    <span class="app-title">System Hardening Interface for Enhanced Logical Defense</span>
+  </div>
+  
+  <div class="window-controls">
+    <button mat-icon-button 
+            (click)="toggleAdminMode()" 
+            [title]="isAdmin ? 'Running as Administrator' : 'Relaunch as Administrator'"
+            [class.admin-active]="isAdmin">
+      <mat-icon>{{ isAdmin ? 'verified_user' : 'gpp_maybe' }}</mat-icon>
+    </button>
+  </div>
+</div>

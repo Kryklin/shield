@@ -1,0 +1,91 @@
+@use '../../styles/glass';
+
+.sidenav-container {
+    height: 100vh;
+}
+
+.sidenav {
+    width: 280px;
+    background: rgba(20, 20, 20, 0.85); // Slightly darker for contrast
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+    // Dashboard specific styling to match headers
+    .dashboard-item {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        height: 54px !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        
+        &:hover {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        mat-icon {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+
+    // Accordion styling tweaks
+    .mat-expansion-panel {
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+
+        &.mat-expanded {
+            background: rgba(255, 255, 255, 0.02) !important;
+        }
+    }
+
+    .mat-expansion-panel-header {
+        height: 54px !important;
+        padding: 0 24px !important;
+        
+        &:hover {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        .mat-expansion-panel-header-title {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 16px; // Align with nav list icons
+
+            mat-icon {
+                margin-right: 0; // Reset default margin
+                color: rgba(255, 255, 255, 0.5);
+            }
+        }
+    }
+
+    // Nested items indentation
+    .nav-group-items {
+        padding-bottom: 8px;
+        
+        a.mat-mdc-list-item {
+            padding-left: 24px !important; // Indent nested items
+            
+            .mdc-list-item__content {
+                padding-left: 32px !important; // Further visual indentation
+            }
+
+            mat-icon {
+                transform: scale(0.9); // Slightly smaller icons for nested items
+            }
+        }
+    }
+}
+
+.active-link {
+    background: rgba(var(--primary-rgb), 0.15);
+    border-left: 3px solid var(--primary-color);
+    
+    .mat-icon {
+        color: var(--primary-color);
+    }
+    
+    .mat-list-item-content {
+        color: white;
+    }
+}

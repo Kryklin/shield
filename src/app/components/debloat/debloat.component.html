@@ -1,0 +1,36 @@
+<div class="debloat-container fade-in">
+  <div class="header">
+    <mat-icon class="header-icon">cleaning_services</mat-icon>
+    <h1>System Debloat</h1>
+    <p class="subtitle">Remove pre-installed bloatware and unnecessary applications.</p>
+  </div>
+
+  <div class="modules-list">
+    @for (module of debloatService.modules(); track module.id) {
+      <div class="module-row" [class.enabled]="module.state?.enabled">
+        <div class="module-icon">
+          <mat-icon [class.safe]="module.state?.status === 'Safe'">
+            {{ module.state?.status === 'Safe' ? 'check_circle' : 'delete_outline' }}
+          </mat-icon>
+        </div>
+
+        <div class="module-info">
+          <h3>{{ module.name }}</h3>
+          <p>{{ module.description }}</p>
+        </div>
+        
+        <div class="module-action">
+          @if (module.isProcessing || module.loading) {
+            <mat-spinner diameter="24"></mat-spinner>
+          } @else {
+            <mat-slide-toggle 
+              [checked]="module.state?.enabled"
+              (change)="debloatService.toggleModule(module.id, $event.checked)"
+              color="warn">
+            </mat-slide-toggle>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

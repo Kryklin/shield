@@ -1,0 +1,70 @@
+@use '@angular/material' as mat;
+
+/* Glassmorphism Utilities */
+@mixin glass($opacity: 0.7, $blur: 12px) {
+  // Use a white tint for the glass effect to make it visible on dark backgrounds
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.1); // Subtle white border
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); // Deeper shadow for depth
+}
+
+// Placeholder for extending
+%glass-panel {
+  @include glass(0.6, 16px);
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  // 1. Grid Texture Overlay
+  &::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+  }
+
+  // 2. Global Sheen/Scan Animation
+  &::after {
+     content: ''; position: absolute;
+     top: 0; left: -100%; width: 50%; height: 100%;
+     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+     transform: skewX(-20deg);
+     animation: global-scan 8s linear infinite;
+     pointer-events: none;
+     z-index: 0;
+  }
+  
+  // Ensure content is above texture
+  & > * { position: relative; z-index: 1; }
+  
+  &:hover {
+    @include glass(0.8, 24px); // Deeper blur
+    transform: translateY(-4px) scale(1.005);
+    box-shadow: 0 20px 60px 0 rgba(0, 0, 0, 0.6); // Deep ambient shadow
+    border-color: rgba(255, 255, 255, 0.25); // Crisp border highlighting
+    
+    // Slight brightness boost to texture
+    &::before { opacity: 0.6; }
+  }
+}
+
+@keyframes global-scan {
+    0% { left: -100%; }
+    50% { left: 200%; }
+    100% { left: 200%; } // Pause before restart
+}
+
+/* Global Animations */
+@keyframes drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

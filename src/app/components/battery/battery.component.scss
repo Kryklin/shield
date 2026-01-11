@@ -1,0 +1,243 @@
+@use '../../styles/glass';
+
+.battery-container {
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 32px;
+  
+  .header-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    color: var(--mat-sys-tertiary);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .subtitle {
+    color: rgba(255,255,255,0.6);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr; // Stack on small screens
+  }
+}
+
+.status-card {
+  @extend %glass-panel;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+
+  .ring-container {
+      position: relative;
+      .ring {
+          width: 160px;
+          height: 160px;
+          border-radius: 50%;
+          border: 12px solid;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 0 30px rgba(0,0,0,0.3);
+
+          .value { font-size: 2.5rem; font-weight: 700; line-height: 1; }
+          .label { font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6; margin-top: 4px; }
+      }
+  }
+
+  .stats {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+
+      .stat-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 1.1rem;
+          color: rgba(255,255,255,0.8);
+          
+          mat-icon { color: var(--mat-sys-primary); }
+      }
+
+      button { width: 100%; }
+  }
+}
+
+.plans-card {
+  @extend %glass-panel;
+  padding: 24px;
+  
+  .card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+
+    h3 { margin: 0; font-weight: 400; font-size: 1.2rem; }
+  }
+
+  .plans-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .plan-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px;
+          border-radius: 8px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.05);
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover { background: rgba(255,255,255,0.06); }
+          &:focus { outline: 2px solid var(--mat-sys-primary); background: rgba(255,255,255,0.1); }
+
+          &.active {
+              background: rgba(var(--mat-sys-primary-rgb), 0.1);
+              border-color: var(--mat-sys-primary);
+              
+              .plan-info .plan-name { color: var(--mat-sys-primary); font-weight: 700; }
+              .check { opacity: 1; color: var(--mat-sys-primary); }
+          }
+          
+          .plan-info {
+              .plan-name { font-size: 1rem; margin-bottom: 4px; }
+              .plan-desc { font-size: 0.8rem; opacity: 0.6; }
+          }
+
+          .check { opacity: 0; transition: opacity 0.2s; }
+      }
+  }
+  .panel-header {
+      margin-bottom: 24px;
+      h3 { margin: 0; font-weight: 400; font-size: 1.2rem; }
+  }
+
+  .sessions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      
+      .session-item {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          padding: 16px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 8px;
+          align-items: center;
+          
+          .session-metric {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              
+              .label { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; }
+              span:not(.label) { font-size: 1rem; color: rgba(255,255,255,0.9); }
+              
+              &.energy {
+                  span:not(.label) { font-family: monospace; font-weight: 700; }
+                  .drain { color: #ff1744; }
+                  .charge { color: #00e676; }
+              }
+          }
+      }
+
+      .empty-sessions {
+          text-align: center;
+          padding: 32px;
+          opacity: 0.5;
+          font-style: italic;
+      }
+  }
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.health-card {
+    @extend %glass-panel;
+    padding: 24px;
+
+    h3 { margin: 0 0 24px 0; font-weight: 400; font-size: 1.2rem; }
+
+    .health-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-bottom: 32px;
+
+        .health-item {
+            display: flex;
+            flex-direction: column;
+            
+            .val { font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 4px; }
+            .bad-val { font-size: 1.5rem; font-weight: 700; color: #ff1744; margin-bottom: 4px; }
+            .text-sm { font-size: 1.1rem; opacity: 0.9; margin-top: 6px; } // Smaller for text
+            .label { font-size: 0.7rem; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+        }
+    }
+
+    .wear-bar-container {
+        .bar-bg {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            
+            .bar-fill {
+                height: 100%;
+                border-radius: 4px;
+                transition: width 1s ease;
+            }
+        }
+        
+        .bar-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+        }
+    }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  gap: 20px;
+  opacity: 0.6;
+}

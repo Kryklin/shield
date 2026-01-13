@@ -13,7 +13,9 @@ describe('TopnavComponent', () => {
     githubServiceMock = {
       checkLatestVersion: jasmine.createSpy('checkLatestVersion'),
       updateStatus: signal('checking'),
-      latestRelease: signal(null)
+      latestRelease: signal(null),
+      error: signal(null),
+      quitAndInstall: jasmine.createSpy('quitAndInstall')
     };
 
     // Mock window.shieldApi
@@ -48,7 +50,7 @@ describe('TopnavComponent', () => {
     githubServiceMock.updateStatus.set('checking');
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.update-status.checking')).toBeTruthy();
+    expect(compiled.querySelector('.status-badge.checking')).toBeTruthy();
   });
 
   it('should display outdated badge when status is outdated', () => {
@@ -56,7 +58,19 @@ describe('TopnavComponent', () => {
     githubServiceMock.latestRelease.set({ tag_name: 'v1.0.0', html_url: '#' });
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.update-status.outdated')).toBeTruthy();
+    expect(compiled.querySelector('.status-badge.outdated')).toBeTruthy();
     expect(compiled.textContent).toContain('Update Available');
+  });
+
+  it('should display restart button when status is downloaded', () => {
+    githubServiceMock.updateStatus.set('downloaded');
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const btn = compiled.querySelector('.status-badge.clickable');
+    expect(btn).toBeTruthy();
+    expect(compiled.textContent).toContain('Restart to Update');
+    
+    btn?.dispatchEvent(new Event('click'));
+    expect(githubServiceMock.quitAndInstall).toHaveBeenCalled();
   });
 });

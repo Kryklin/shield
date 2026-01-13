@@ -2,14 +2,16 @@ import { app, BrowserWindow, ipcMain, autoUpdater } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
+import { updateElectronApp } from 'update-electron-app';
+import { exec, ExecException } from 'child_process';
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('update-electron-app')({
+updateElectronApp({
   repo: 'Kryklin/shield',
   updateInterval: '1 hour'
 });
@@ -130,7 +132,7 @@ ipcMain.handle('relaunch-as-admin', () => {
   // For dev mode, we might be running electron directly, but let's assume we want to relaunch the current executable context
   // Use PowerShell to start the process with RunAs
   const command = `powershell -Command "Start-Process '${exe}' -Verb RunAs"`;
-  require('child_process').exec(command, (error: any) => {
+  exec(command, (error: ExecException | null) => {
       if (!error) {
         app.quit();
       }

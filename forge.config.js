@@ -57,7 +57,8 @@ module.exports = {
           owner: 'Kryklin',
           name: 'shield'
         },
-        prerelease: false
+        prerelease: false,
+        draft: false
       }
     }
   ]

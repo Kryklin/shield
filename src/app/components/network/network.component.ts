@@ -2,17 +2,18 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../modules/material/material-module';
 import { NetworkService, DNSPreset } from '../../services/network.service';
+import { UiService } from '../../services/ui.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-network',
-  standalone: true,
   imports: [CommonModule, MaterialModule, FormsModule],
   templateUrl: './network.component.html',
   styleUrl: './network.component.scss'
 })
 export class NetworkComponent {
   network = inject(NetworkService);
+  ui = inject(UiService);
 
   // Helper to format bytes
   formatBytes(bytes: number): string {
@@ -28,46 +29,46 @@ export class NetworkComponent {
   }
 
   async repair() {
-    if (confirm('This will reset your network stack and briefly drop your connection. Continue?')) {
-        const res = await this.network.repairNetwork();
-        alert(res.message || 'Repair sequence completed.');
+    if (await this.ui.confirm({ title: 'Reset Network?', message: 'This will reset your network stack and briefly drop your connection. Continue?', isDestructive: true })) {
+        const res = await this.network.repairNetwork() as { success: boolean, message?: string };
+        this.ui.showSnackBar(res.message || 'Repair sequence completed.');
     }
   }
 
   async blockAds() {
-    if (confirm('This will download and apply a system-wide ad-blocking hosts file. This replaces your current hosts file (a backup will be made). Continue?')) {
+    if (await this.ui.confirm({ title: 'Update Hosts File?', message: 'This will download and apply a system-wide ad-blocking hosts file. This replaces your current hosts file (a backup will be made). Continue?' })) {
         await this.network.updateHosts();
-        alert('Ad-blocking hosts file applied successfully!');
+        this.ui.showSnackBar('Ad-blocking hosts file applied successfully!');
     }
   }
 
   async resetHosts() {
-    if (confirm('This will reset your hosts file to Windows defaults. Continue?')) {
+    if (await this.ui.confirm({ title: 'Reset Hosts File?', message: 'This will reset your hosts file to Windows defaults. Continue?', isDestructive: true })) {
         await this.network.resetHosts();
-        alert('Hosts file reset to default.');
+        this.ui.showSnackBar('Hosts file reset to default.');
     }
   }
 
   async randomizeMac(index: number) {
-      if (confirm('Randomizing MAC address will briefly reset the adapter. You may lose connectivity for a moment. Continue?')) {
-          const res = await this.network.randomizeMac(index);
+      if (await this.ui.confirm({ title: 'Randomize MAC?', message: 'Randomizing MAC address will briefly reset the adapter. You may lose connectivity for a moment. Continue?' })) {
+          const res = await this.network.randomizeMac(index) as { success: boolean, mac?: string, error?: string };
           if (res.success) {
-              alert('MAC Randomization successful. New MAC: ' + res.mac);
+              this.ui.showSnackBar('MAC Randomization successful. New MAC: ' + res.mac);
               this.network.refresh();
           } else {
-              alert('Failed: ' + res.error);
+              this.ui.showSnackBar('Failed: ' + res.error);
           }
       }
   }
 
   async resetMac(index: number) {
-      if (confirm('Reset MAC address to hardware default? Adapter will restart.')) {
-        const res = await this.network.resetMac(index);
+      if (await this.ui.confirm({ title: 'Reset MAC?', message: 'Reset MAC address to hardware default? Adapter will restart.', isDestructive: true })) {
+        const res = await this.network.resetMac(index) as { success: boolean, error?: string };
         if (res.success) {
-            alert('MAC reset to factory default.');
+            this.ui.showSnackBar('MAC reset to factory default.');
             this.network.refresh();
         } else {
-            alert('Failed: ' + res.error);
+            this.ui.showSnackBar('Failed: ' + res.error);
         }
       }
   }

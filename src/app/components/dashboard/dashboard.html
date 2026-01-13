@@ -92,9 +92,14 @@
             </div>
         </div>
     } @else {
-        <div class="loading-state">
-             <mat-spinner diameter="32"></mat-spinner>
-             <span>Gathering Intelligence...</span>
+        <div class="specs-grid skeleton-grid">
+            <!-- 6 Items to match real grid -->
+            @for (i of [1,2,3,4,5,6]; track i) {
+                <div class="spec-item">
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line long"></div>
+                </div>
+            }
         </div>
     }
   </div>
@@ -143,18 +148,21 @@
      </div>
      
      <!-- Battery (if Laptop) -->
-     @if (system.info()?.IsLaptop) {
-         <div class="glass-panel widget-card battery-card">
-            <div class="widget-header">
-                <mat-icon>battery_full</mat-icon>
-                <h3>Power</h3>
-            </div>
-            <!-- Simple Battery display assumed available via system info later or future widget -->
-            <!-- For now, just show status since we removed detailed battery logic -->
-            <div class="widget-value">MOBILE</div>
-            <div class="widget-sub">Running on Battery</div>
-         </div>
-     }
+      @if (system.info()?.IsLaptop) {
+          <div class="glass-panel widget-card battery-card">
+             <div class="widget-header">
+                 <mat-icon [class.charging]="battery.status()?.isCharging">battery_full</mat-icon>
+                 <h3>Power</h3>
+             </div>
+             @if (battery.status(); as bat) {
+                 <div class="widget-value">{{ bat.percentage }}%</div>
+                 <div class="widget-sub">{{ bat.isCharging ? 'Charging' : 'On Battery' }}</div>
+             } @else {
+                 <div class="widget-value">--</div>
+                 <div class="widget-sub">Checking...</div>
+             }
+          </div>
+      }
   </div>
 
 </div>

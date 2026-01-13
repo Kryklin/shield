@@ -8,8 +8,23 @@
     <button mat-icon-button 
             (click)="toggleAdminMode()" 
             [title]="isAdmin ? 'Running as Administrator' : 'Relaunch as Administrator'"
-            [class.admin-active]="isAdmin">
+            [class.admin-active]="isAdmin"
+            [class.admin-inactive]="!isAdmin"
+            [matMenuTriggerFor]="adminMenu"
+            #adminMenuTrigger="matMenuTrigger">
       <mat-icon>{{ isAdmin ? 'verified_user' : 'gpp_maybe' }}</mat-icon>
     </button>
+    
+    <mat-menu #adminMenu="matMenu" xPosition="before" class="glass-menu">
+        <div class="admin-popup-content" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
+            <p><strong>Admin Access Required</strong></p>
+            <p>You can use this button to restart as Administrator.</p>
+            <p class="sub-text">Some commands require UAC elevation if you don't restart.</p>
+            <div class="actions">
+                <button mat-stroked-button color="warn" (click)="toggleAdminMode(); adminMenuTrigger.closeMenu()">Restart Admin</button>
+                <button mat-button (click)="adminMenuTrigger.closeMenu()">Dismiss</button>
+            </div>
+        </div>
+    </mat-menu>
   </div>
 </div>

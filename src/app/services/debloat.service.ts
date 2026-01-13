@@ -121,7 +121,7 @@ export class DebloatService {
     const mods = this.modules();
     const promises = mods.map(async (mod, index) => {
       try {
-        const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']);
+        const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
         this.modules.update(current => {
           const updated = [...current];
           updated[index] = { ...updated[index], state: result, loading: false };
@@ -156,7 +156,7 @@ export class DebloatService {
 
     try {
       await window.shieldApi.runScript(mod.script, ['-Action', action], true);
-      const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']);
+      const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
       
       this.modules.update(current => {
         const updated = [...current];

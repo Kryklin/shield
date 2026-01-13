@@ -125,3 +125,5 @@ export class MaterialModule {}
 
 export { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export { MatExpansionPanel } from '@angular/material/expansion';
+export { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+export { MatMenuTrigger } from '@angular/material/menu';

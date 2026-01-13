@@ -1,7 +1,7 @@
 @use '../../styles/glass';
 
 .sidenav-container {
-    height: 100vh;
+    height: 100%;
 }
 
 .sidenav {
@@ -15,14 +15,23 @@
         margin: 0 !important;
         border-radius: 0 !important;
         height: 54px !important;
+        padding: 0 24px !important; // Align with expansion panel headers
         color: rgba(255, 255, 255, 0.7) !important;
         
+        // Ensure content alignment matches expansion headers (icon + text gap)
+        .mdc-list-item__content {
+            display: flex;
+            align-items: center;
+            gap: 16px; 
+        }
+
         &:hover {
             background: rgba(255, 255, 255, 0.03) !important;
         }
 
         mat-icon {
             color: rgba(255, 255, 255, 0.5);
+            margin-right: 0 !important; // Reset Material default margin
         }
     }
 
@@ -78,14 +87,17 @@
 }
 
 .active-link {
-    background: rgba(var(--primary-rgb), 0.15);
-    border-left: 3px solid var(--primary-color);
+    background: rgba(41, 121, 255, 0.15) !important;
+    border-left: 3px solid #2979ff !important;
     
-    .mat-icon {
-        color: var(--primary-color);
+    // Ensure text brightness on active
+    &.dashboard-item, & .mat-expansion-panel-header-title, & .mdc-list-item__content {
+        color: white !important;
+        font-weight: 500;
     }
-    
-    .mat-list-item-content {
-        color: white;
+
+    mat-icon {
+        color: #2979ff !important;
+        opacity: 1 !important;
     }
 }

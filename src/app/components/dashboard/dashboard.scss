@@ -1,16 +1,19 @@
 @use '../../styles/glass';
 
 .dashboard-container {
-  padding: 24px 48px 24px 48px;
-  height: calc(100vh - 140px);
+  padding: 24px 48px 48px 48px; // Added bottom padding for scroll space
+  // height: calc(100vh - 140px); // REMOVED: Let content flow
   box-sizing: border-box;
   max-width: 1400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  overflow: hidden;
+  // overflow: hidden; // REMOVED: Let parent scroll handle it
   animation: fadeIn 0.5s ease-out;
+  
+  // Subtle background gradient for depth
+  background: radial-gradient(circle at 50% 0%, rgba(41, 121, 255, 0.05) 0%, transparent 70%);
 }
 
 // Threat Intelligence Card (Hero)
@@ -95,8 +98,10 @@
 
       .core-data {
           text-align: center;
+          position: absolute; // Center strictly
+          z-index: 2;
           .score { font-size: 3rem; font-weight: 200; line-height: 1; text-shadow: 0 0 20px currentColor; margin-bottom: 4px; }
-          .label { font-size: 0.6rem; letter-spacing: 2px; opacity: 0.6; font-weight: 700; }
+          .label { font-size: 0.6rem; letter-spacing: 2px; opacity: 0.6; font-weight: 700; color: white; }
       }
   }
 
@@ -172,6 +177,7 @@
     padding: 32px 40px;
     margin-bottom: 16px; 
     flex-shrink: 0;
+    min-height: 250px; // Reserve space for content to prevent CLS
 
     .card-header {
         display: flex;
@@ -214,12 +220,34 @@
     }
 
     .loading-state {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 20px;
-        opacity: 0.7;
+        display: none; // Hiding old spinner loading
     }
+
+    // Skeleton Styles
+    .skeleton-line {
+        height: 16px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 4px;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        &.short { width: 40%; height: 12px; margin-bottom: 8px; }
+        &.long { width: 80%; }
+    }
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
 }
 
 // Widget Grid
@@ -227,13 +255,13 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 24px;
-    flex: 1; // Fill remaining space
-    min-height: 0; // Allow shrinking
-    overflow-y: auto; // Scroll if needed
-    padding-bottom: 8px; // Padding for scrollbar
+    // flex: 1; // Removed
+    // min-height: 0; // Removed
+    // overflow-y: auto; // Removed
+    padding-bottom: 8px; 
         
     // Custom Scrollbar
-    &::-webkit-scrollbar { width: 0; } // Hidden scrollbar for cleanliness
+    // &::-webkit-scrollbar { width: 0; } // Removed
 
     .widget-card {
         @extend %glass-panel;
@@ -241,7 +269,10 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 160px; // Increased slightly to prevent minor shifts
         transition: transform 0.2s ease, background 0.2s;
         cursor: pointer;
         border: 1px solid rgba(255,255,255,0.05);
@@ -281,7 +312,10 @@
         }
 
         &.battery-card {
-            .widget-header mat-icon { color: #00e676; } // Green battery
+            .widget-header mat-icon { 
+                color: #00e676; 
+                &.charging { animation: pulse 2s infinite; color: #ffeb3b; }
+            }
         }
     }
 }

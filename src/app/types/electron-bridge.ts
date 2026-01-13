@@ -17,7 +17,7 @@ export interface ShieldApi {
   close: () => void;
   onWindowMaximizedChange: (callback: (isMaximized: boolean) => void) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  runScript: (scriptName: string, args: string[], requiresAdmin?: boolean) => Promise<any>;
+  runScript: (scriptName: string, args: string[], requiresAdmin?: boolean) => Promise<unknown>;
   checkAdminStatus: () => Promise<boolean>;
   relaunchAsAdmin: () => void;
 }

@@ -15,7 +15,6 @@ type DashboardItem = (HardeningModule & { source: 'hardening' }) | (DebloatModul
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [MaterialModule, IconsModule, RouterModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',

@@ -2,10 +2,10 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../modules/material/material-module';
 import { StorageService } from '../../services/storage.service';
+import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-storage',
-  standalone: true,
   imports: [CommonModule, MaterialModule],
   template: `
     <div class="storage-container fade-in">
@@ -140,6 +140,7 @@ import { StorageService } from '../../services/storage.service';
 })
 export class StorageComponent {
     storage = inject(StorageService);
+    ui = inject(UiService);
 
     formatBytes(bytes: number): string {
         if (bytes === 0) return '0 GB';
@@ -147,15 +148,15 @@ export class StorageComponent {
     }
 
     async deepClean() {
-        if (confirm('Deep Clean will stop Windows Update services temporarily and clear update caches. Continue?')) {
-            const res = await this.storage.deepClean();
-            alert(res.message || (res.success ? 'Deep clean finished.' : 'Failed: ' + res.error));
+        if (await this.ui.confirm({ title: 'Deep System Clean?', message: 'Deep Clean will stop Windows Update services temporarily and clear update caches. Continue?', isDestructive: true })) {
+            const res = await this.storage.deepClean() as { success: boolean, message?: string, error?: string };
+            this.ui.showSnackBar(res.message || (res.success ? 'Deep clean finished.' : 'Failed: ' + res.error));
             this.storage.refresh();
         }
     }
 
     async toggleSense() {
-        const res = await this.storage.toggleStorageSense();
-        alert(res.enabled ? 'Windows Storage Sense Enabled' : 'Windows Storage Sense Disabled');
+        const res = await this.storage.toggleStorageSense() as { enabled: boolean };
+        this.ui.showSnackBar(res.enabled ? 'Windows Storage Sense Enabled' : 'Windows Storage Sense Disabled');
     }
 }

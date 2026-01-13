@@ -47,6 +47,10 @@
 
   button {
     height: 48px;
+    width: 48px;
+    border-radius: 0;
+    transition: background 0.2s;
+    
     .settings-btn {
       opacity: 0.7;
       transition: opacity 0.3s;
@@ -57,14 +61,6 @@
       }
     }
 
-    .admin-active {
-      color: #00e676; // Bright green
-      filter: drop-shadow(0 0 8px rgba(0, 230, 118, 0.4));
-    }
-    width: 48px;
-    border-radius: 0;
-    transition: background 0.2s;
-    
     mat-icon {
       font-size: 18px;
       width: 18px;
@@ -75,5 +71,42 @@
       background: var(--mat-sys-surface-variant);
       color: var(--mat-sys-on-surface-variant);
     }
+
+    &.admin-active {
+      color: #00e676; // Bright green
+      filter: drop-shadow(0 0 8px rgba(0, 230, 118, 0.4));
+    }
+    
+    &.admin-inactive {
+        color: #ff1744; // Bright red
+        filter: drop-shadow(0 0 8px rgba(255, 23, 68, 0.4));
+        animation: pulse-red 2s infinite;
+    }
   }
+}
+
+@keyframes pulse-red {
+    0% { filter: drop-shadow(0 0 8px rgba(255, 23, 68, 0.4)); opacity: 1; }
+    50% { filter: drop-shadow(0 0 15px rgba(255, 23, 68, 0.8)); opacity: 0.8; }
+    100% { filter: drop-shadow(0 0 8px rgba(255, 23, 68, 0.4)); opacity: 1; }
+}
+
+::ng-deep .admin-popup-content {
+    padding: 16px;
+    max-width: 250px;
+    outline: none; // remove focus ring from tabindex
+    color: #ffffff; // Force white text
+    
+    p { margin: 0 0 8px 0; font-size: 0.9rem; color: #ffffff; }
+    .sub-text { font-size: 0.8rem; opacity: 0.8; margin-bottom: 16px; color: rgba(255, 255, 255, 0.7); }
+    
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        
+        button {
+            font-size: 0.8rem;
+        }
+    }
 }

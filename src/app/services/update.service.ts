@@ -20,7 +20,7 @@ export class UpdateService {
   async refresh() {
     this.loading.set(true);
     try {
-        const res = await window.shieldApi.runScript('update-manager', ['-Action', 'Status']);
+        const res = await window.shieldApi.runScript('update-manager', ['-Action', 'Status']) as UpdateStatus;
         this.status.set(res);
     } finally {
         this.loading.set(false);

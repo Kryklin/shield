@@ -13,10 +13,10 @@
     </div>
     
     <div class="profiles-row">
-        @if (!isCreating) {
+        @if (!isCreating()) {
             <mat-form-field appearance="outline" class="profile-select">
                 <mat-label>Select Security Profile</mat-label>
-                <mat-select [(ngModel)]="selectedProfileId" (selectionChange)="applyProfile()">
+                <mat-select [formControl]="selectedProfileControl" (selectionChange)="applyProfile()">
                     @for (profile of hardeningService.profiles(); track profile.id) {
                         <mat-option [value]="profile.id">
                             {{ profile.name }}
@@ -32,10 +32,10 @@
             <div class="create-profile-form">
                 <mat-form-field appearance="outline" class="new-name-input">
                     <mat-label>New Profile Name</mat-label>
-                    <input matInput [(ngModel)]="newProfileName" (keyup.enter)="saveProfile()" placeholder="e.g. Custom Gaming">
+                    <input matInput [formControl]="newProfileControl" (keyup.enter)="saveProfile()" placeholder="e.g. Custom Gaming">
                 </mat-form-field>
                 
-                <button mat-icon-button color="primary" (click)="saveProfile()" [disabled]="!newProfileName">
+                <button mat-icon-button color="primary" (click)="saveProfile()" [disabled]="!newProfileControl.value">
                     <mat-icon>check</mat-icon>
                 </button>
                 <button mat-icon-button (click)="toggleCreateMode()">

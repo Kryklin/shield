@@ -4,7 +4,6 @@ import { TopnavComponent } from "./components/topnav/topnav.component";
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [SidenavComponent, TopnavComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'

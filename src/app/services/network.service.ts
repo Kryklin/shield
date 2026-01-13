@@ -43,7 +43,7 @@ export class NetworkService {
   async refresh() {
     this.loading.set(true);
     try {
-      const result = await window.shieldApi.runScript('network-manager', ['-Action', 'GetAdapters']);
+      const result = await window.shieldApi.runScript('network-manager', ['-Action', 'GetAdapters']) as NetworkAdapter[] | NetworkAdapter;
       this.adapters.set(Array.isArray(result) ? result : [result]);
       
       this.getGatewayStats();
@@ -57,8 +57,8 @@ export class NetworkService {
   gateway = signal<{ip: string, latency: number} | null>(null);
 
   async getGatewayStats() {
-      const ipRes = await window.shieldApi.runScript('network-manager', ['-Action', 'GetPublicIP']);
-      const latRes = await window.shieldApi.runScript('network-manager', ['-Action', 'TestLatency']);
+      const ipRes = await window.shieldApi.runScript('network-manager', ['-Action', 'GetPublicIP']) as { ip: string };
+      const latRes = await window.shieldApi.runScript('network-manager', ['-Action', 'TestLatency']) as { latency: number };
       
       this.gateway.set({
           ip: ipRes.ip,

@@ -32,7 +32,7 @@ export class StorageService {
   async refresh() {
     this.loading.set(true);
     try {
-        const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'Status']);
+        const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'Status']) as StorageDrive[] | StorageDrive;
         this.drives.set(Array.isArray(res) ? res : (res ? [res] : []));
     } finally {
         this.loading.set(false);
@@ -40,14 +40,14 @@ export class StorageService {
   }
 
   async clean() {
-    const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'Clean']);
+    const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'Clean']) as StorageDrive[] | StorageDrive;
     this.drives.set(Array.isArray(res) ? res : (res ? [res] : []));
   }
 
   async scanLargeFiles() {
     this.scanning.set(true);
     try {
-        const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'FindLarge']);
+        const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'FindLarge']) as LargeFile[];
         this.largeFiles.set(Array.isArray(res) ? res : (res ? [res] : []));
     } finally {
         this.scanning.set(false);

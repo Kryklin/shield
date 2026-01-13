@@ -21,7 +21,7 @@ export class StartupService {
   async refresh() {
     this.loading.set(true);
     try {
-      const result = await window.shieldApi.runScript('startup-manager', ['-Action', 'GetStartup']);
+      const result = await window.shieldApi.runScript('startup-manager', ['-Action', 'GetStartup']) as StartupItem[] | StartupItem;
       this.items.set(Array.isArray(result) ? result : [result]);
     } catch (err) {
       console.error('Failed to get startup items:', err);

@@ -21,7 +21,7 @@ export interface HardeningProfile {
     id: string;
     name: string;
     isSystem: boolean;
-    settings: { [moduleId: string]: boolean };
+    settings: Record<string, boolean>;
 }
 
 @Injectable({
@@ -406,7 +406,7 @@ export class HardeningService {
     // Process in parallel
     const promises = mods.map(async (mod, index) => {
       try {
-        const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']);
+        const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
         
         this.modules.update(current => {
           const updated = [...current];
@@ -451,7 +451,7 @@ export class HardeningService {
       await window.shieldApi.runScript(mod.script, ['-Action', action], true);
       
       // Re-query status to confirm state
-      const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']);
+      const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
       
       this.modules.update(current => {
         const updated = [...current];

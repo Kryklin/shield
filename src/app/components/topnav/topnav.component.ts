@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '../../modules/material/material-module';
 import { MaterialModule } from '../../modules/material/material-module';
 import { IconsModule } from '../../modules/icons/icons-module';
 import { LogoComponent } from '../logo/logo.component';
@@ -12,9 +13,19 @@ import { LogoComponent } from '../logo/logo.component';
 })
 export class TopnavComponent implements OnInit {
   isAdmin = false;
+  @ViewChild('adminMenuTrigger') adminMenuTrigger!: MatMenuTrigger;
 
   async ngOnInit() {
     this.isAdmin = await window.shieldApi.checkAdminStatus();
+    
+    if (!this.isAdmin) {
+        // Show popup after a short delay to ensure view is initialized
+        setTimeout(() => {
+            if (this.adminMenuTrigger) {
+                this.adminMenuTrigger.openMenu();
+            }
+        }, 1000);
+    }
   }
 
   async toggleAdminMode() {

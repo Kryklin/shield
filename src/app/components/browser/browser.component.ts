@@ -2,10 +2,10 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../modules/material/material-module';
 import { BrowserService } from '../../services/browser.service';
+import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-browser',
-  standalone: true,
   imports: [CommonModule, MaterialModule],
   template: `
     <div class="browser-container fade-in">
@@ -132,14 +132,15 @@ import { BrowserService } from '../../services/browser.service';
 })
 export class BrowserComponent {
     browser = inject(BrowserService);
+    ui = inject(UiService);
 
     async harden(name: 'Chrome' | 'Edge' | 'Firefox') {
-        if (confirm(`Apply security policies to ${name}? This acts at a Registry level and may block some convenience features.`)) {
-            const res = await this.browser.hardenBrowser(name);
+        if (await this.ui.confirm({ title: 'Apply Hardening?', message: `Apply security policies to ${name}? This acts at a Registry level and may block some convenience features.` })) {
+            const res = await this.browser.hardenBrowser(name) as { success: boolean, error?: string };
             if (res.success) {
-                alert(`${name} hardened successfully.`);
+                this.ui.showSnackBar(`${name} hardened successfully.`);
             } else {
-                alert(`Failed: ${res.error}`);
+                this.ui.showSnackBar(`Failed: ${res.error}`);
             }
         }
     }

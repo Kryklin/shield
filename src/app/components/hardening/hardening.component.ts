@@ -1,6 +1,6 @@
-import { Component, inject, AfterViewInit, ViewChildren, QueryList, Renderer2 } from '@angular/core';
+import { Component, inject, AfterViewInit, ViewChildren, QueryList, Renderer2, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MaterialModule } from '../../modules/material/material-module';
 import { HardeningService } from '../../services/hardening.service';
 import { ActivatedRoute } from '@angular/router';
@@ -8,10 +8,10 @@ import { MatExpansionPanel } from '../../modules/material/material-module';
 
 @Component({
   selector: 'app-hardening',
-  standalone: true,
-  imports: [CommonModule, MaterialModule, FormsModule],
+  imports: [CommonModule, MaterialModule, ReactiveFormsModule],
   templateUrl: './hardening.component.html',
-  styleUrl: './hardening.component.scss'
+  styleUrl: './hardening.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HardeningComponent implements AfterViewInit {
   hardeningService = inject(HardeningService);
@@ -21,9 +21,9 @@ export class HardeningComponent implements AfterViewInit {
 
   @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
 
-  selectedProfileId: string = 'standard';
-  isCreating = false;
-  newProfileName = '';
+  selectedProfileControl = new FormControl('standard', { nonNullable: true });
+  newProfileControl = new FormControl('', { nonNullable: true });
+  isCreating = signal(false);
 
   ngAfterViewInit() {
     this.route.queryParams.subscribe(params => {
@@ -52,36 +52,38 @@ export class HardeningComponent implements AfterViewInit {
     // Initialize dropdown
     const active = this.hardeningService.activeProfileId();
     if (active) {
-        this.selectedProfileId = active;
+        this.selectedProfileControl.setValue(active);
     }
   }
 
   // Execute hardening profile
   async applyProfile() {
       // Find name for confirmation
-      const profile = this.hardeningService.profiles().find(p => p.id === this.selectedProfileId);
+      const profileId = this.selectedProfileControl.value;
+      const profile = this.hardeningService.profiles().find(p => p.id === profileId);
       if (!profile) return;
 
       if (confirm(`Apply "${profile.name}" hardening profile?\nThis will adjust settings to match the profile configuration.`)) {
-          await this.hardeningService.applyProfile(this.selectedProfileId);
+          await this.hardeningService.applyProfile(profileId);
       }
   }
 
   toggleCreateMode() {
-      this.isCreating = !this.isCreating;
-      this.newProfileName = '';
+      this.isCreating.update(v => !v);
+      this.newProfileControl.setValue('');
   }
 
   saveProfile() {
-      if (!this.newProfileName.trim()) return;
+      const name = this.newProfileControl.value;
+      if (!name.trim()) return;
 
-      const result = this.hardeningService.saveProfile(this.newProfileName);
+      const result = this.hardeningService.saveProfile(name);
       
       if (result.success) {
-          this.isCreating = false;
+          this.isCreating.set(false);
           // Select the new profile (it becomes active activeProfileId, so update local model)
           const active = this.hardeningService.activeProfileId();
-          if (active) this.selectedProfileId = active;
+          if (active) this.selectedProfileControl.setValue(active);
       } else {
           // Handle duplicate
           if (result.duplicateOf) {

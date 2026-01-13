@@ -43,7 +43,7 @@ export class BatteryService {
   async refresh() {
     this.loading.set(true);
     try {
-      const result = await window.shieldApi.runScript('battery-manager', ['-Action', 'Status']);
+      const result = await window.shieldApi.runScript('battery-manager', ['-Action', 'Status']) as BatteryStatus;
       this.status.set(result);
       // Auto-fetch health report
       this.getHealth();
@@ -57,7 +57,7 @@ export class BatteryService {
   async getHealth() {
     this.healthLoading.set(true);
     try {
-      const result = await window.shieldApi.runScript('battery-manager', ['-Action', 'GetDetailedReport']);
+      const result = await window.shieldApi.runScript('battery-manager', ['-Action', 'GetDetailedReport']) as BatteryHealth;
       this.health.set(result);
     } catch (err) {
       console.error('Failed to parse health report:', err);

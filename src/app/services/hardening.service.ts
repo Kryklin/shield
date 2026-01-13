@@ -406,7 +406,7 @@ export class HardeningService {
     // Process in parallel
     const promises = mods.map(async (mod, index) => {
       try {
-        const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
+        const result = await (window as any).shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
         
         this.modules.update(current => {
           const updated = [...current];
@@ -448,10 +448,10 @@ export class HardeningService {
     try {
       // Toggle actions usually require Admin privileges (HKLM writes)
       // Passing true to request Elevation via UAC
-      await window.shieldApi.runScript(mod.script, ['-Action', action], true);
+      await (window as any).shieldApi.runScript(mod.script, ['-Action', action], true);
       
       // Re-query status to confirm state
-      const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
+      const result = await (window as any).shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
       
       this.modules.update(current => {
         const updated = [...current];

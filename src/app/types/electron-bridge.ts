@@ -22,8 +22,3 @@ export interface ShieldApi {
   relaunchAsAdmin: () => void;
 }
 
-declare global {
-  interface Window {
-    shieldApi: ShieldApi;
-  }
-}

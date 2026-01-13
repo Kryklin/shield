@@ -5,6 +5,33 @@
   </div>
   
   <div class="window-controls">
+    <!-- Update Status Indicator -->
+    @switch (github.updateStatus()) {
+      @case ('checking') {
+        <div class="update-status checking" title="Checking for updates...">
+          <mat-spinner diameter="16"></mat-spinner>
+        </div>
+      }
+      @case ('uptodate') {
+        <div class="update-status uptodate" [title]="'Up to date (v' + github.latestRelease()?.tag_name + ')'">
+          <mat-icon>check_circle</mat-icon>
+          <span class="version-text">{{ github.latestRelease()?.tag_name }}</span>
+        </div>
+      }
+      @case ('outdated') {
+        <a [href]="github.latestRelease()?.html_url" target="_blank" class="update-status outdated" [title]="'Update available: ' + github.latestRelease()?.tag_name">
+          <mat-icon class="pulse-icon">system_update</mat-icon>
+          <span class="version-text">Update Available</span>
+        </a>
+      }
+      @case ('error') {
+        <!-- Silent fail or subtle indicator -->
+        <div class="update-status error" title="Failed to check updates">
+           <mat-icon>wifi_off</mat-icon>
+        </div>
+      }
+    }
+
     <button mat-icon-button 
             (click)="toggleAdminMode()" 
             [title]="isAdmin ? 'Running as Administrator' : 'Relaunch as Administrator'"

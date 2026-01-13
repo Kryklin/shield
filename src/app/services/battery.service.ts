@@ -43,7 +43,7 @@ export class BatteryService {
   async refresh() {
     this.loading.set(true);
     try {
-      const result = await window.shieldApi.runScript('battery-manager', ['-Action', 'Status']) as BatteryStatus;
+      const result = await (window as any).shieldApi.runScript('battery-manager', ['-Action', 'Status']) as BatteryStatus;
       this.status.set(result);
       // Auto-fetch health report
       this.getHealth();
@@ -57,7 +57,7 @@ export class BatteryService {
   async getHealth() {
     this.healthLoading.set(true);
     try {
-      const result = await window.shieldApi.runScript('battery-manager', ['-Action', 'GetDetailedReport']) as BatteryHealth;
+      const result = await (window as any).shieldApi.runScript('battery-manager', ['-Action', 'GetDetailedReport']) as BatteryHealth;
       this.health.set(result);
     } catch (err) {
       console.error('Failed to parse health report:', err);
@@ -68,20 +68,20 @@ export class BatteryService {
 
   async setPlan(planId: string) {
     this.loading.set(true);
-    await window.shieldApi.runScript('battery-manager', ['-Action', 'SetPlan', '-PlanGuid', planId]);
+    await (window as any).shieldApi.runScript('battery-manager', ['-Action', 'SetPlan', '-PlanGuid', planId]);
     await this.refresh();
   }
 
   async unlockUltimatePlan() {
     this.loading.set(true);
-    await window.shieldApi.runScript('battery-manager', ['-Action', 'UnlockUltimate']);
+    await (window as any).shieldApi.runScript('battery-manager', ['-Action', 'UnlockUltimate']);
     await this.refresh();
   }
 
   async importPlan(path: string) {
     this.loading.set(true);
     try {
-      await window.shieldApi.runScript('battery-manager', ['-Action', 'ImportPlan', '-Path', path]);
+      await (window as any).shieldApi.runScript('battery-manager', ['-Action', 'ImportPlan', '-Path', path]);
       await this.refresh();
     } finally {
       this.loading.set(false);
@@ -89,7 +89,7 @@ export class BatteryService {
   }
 
   async generateReport() {
-    return await window.shieldApi.runScript('battery-manager', ['-Action', 'Report']);
+    return await (window as any).shieldApi.runScript('battery-manager', ['-Action', 'Report']);
   }
 
 

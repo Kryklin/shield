@@ -32,7 +32,7 @@ export class StorageService {
   async refresh() {
     this.loading.set(true);
     try {
-        const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'Status']) as StorageDrive[] | StorageDrive;
+        const res = await (window as any).shieldApi.runScript('storage-manager', ['-Action', 'Status']) as StorageDrive[] | StorageDrive;
         this.drives.set(Array.isArray(res) ? res : (res ? [res] : []));
     } finally {
         this.loading.set(false);
@@ -40,14 +40,14 @@ export class StorageService {
   }
 
   async clean() {
-    const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'Clean']) as StorageDrive[] | StorageDrive;
+    const res = await (window as any).shieldApi.runScript('storage-manager', ['-Action', 'Clean']) as StorageDrive[] | StorageDrive;
     this.drives.set(Array.isArray(res) ? res : (res ? [res] : []));
   }
 
   async scanLargeFiles() {
     this.scanning.set(true);
     try {
-        const res = await window.shieldApi.runScript('storage-manager', ['-Action', 'FindLarge']) as LargeFile[];
+        const res = await (window as any).shieldApi.runScript('storage-manager', ['-Action', 'FindLarge']) as LargeFile[];
         this.largeFiles.set(Array.isArray(res) ? res : (res ? [res] : []));
     } finally {
         this.scanning.set(false);
@@ -55,7 +55,7 @@ export class StorageService {
   }
 
   async deleteFile(path: string) {
-     await window.shieldApi.runScript('storage-manager', ['-Action', 'DeleteFile', '-Path', path]);
+     await (window as any).shieldApi.runScript('storage-manager', ['-Action', 'DeleteFile', '-Path', path]);
      // Refresh list
      await this.scanLargeFiles(); 
   }
@@ -63,13 +63,13 @@ export class StorageService {
   async deepClean() {
     this.loading.set(true);
     try {
-        return await window.shieldApi.runScript('storage-manager', ['-Action', 'DeepClean'], true);
+        return await (window as any).shieldApi.runScript('storage-manager', ['-Action', 'DeepClean'], true);
     } finally {
         this.loading.set(false);
     }
   }
 
   async toggleStorageSense() {
-    return await window.shieldApi.runScript('storage-manager', ['-Action', 'ToggleStorageSense']);
+    return await (window as any).shieldApi.runScript('storage-manager', ['-Action', 'ToggleStorageSense']);
   }
 }

@@ -1,13 +1,15 @@
 {
   "name": "shield",
-  "version": "0.0.6",
-  "productName": "S.H.I.E.L.D.",
+  "version": "0.0.7",
+  "productName": "Shield",
   "main": "dist/electron/main.js",
   "description": "System Hardening Interface for Enhanced Logical Defense",
+  "repository": "https://github.com/Kryklin/shield.git",
   "author": "Victor Kane",
   "scripts": {
     "start": "node scripts/package.js",
     "build": "ng build",
+    "postbuild": "xcopy /E /I /Y powershell dist\\electron\\powershell",
     "lint": "ng lint"
   },
   "prettier": {
@@ -49,6 +51,7 @@
     "@electron-forge/maker-zip": "^7.10.2",
     "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
     "@electron-forge/plugin-fuses": "^7.10.2",
+    "@electron-forge/publisher-github": "^7.11.1",
     "@electron/fuses": "^1.8.0",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^25.0.5",

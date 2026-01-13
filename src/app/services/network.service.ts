@@ -43,7 +43,7 @@ export class NetworkService {
   async refresh() {
     this.loading.set(true);
     try {
-      const result = await window.shieldApi.runScript('network-manager', ['-Action', 'GetAdapters']) as NetworkAdapter[] | NetworkAdapter;
+      const result = await (window as any).shieldApi.runScript('network-manager', ['-Action', 'GetAdapters']) as NetworkAdapter[] | NetworkAdapter;
       this.adapters.set(Array.isArray(result) ? result : [result]);
       
       this.getGatewayStats();
@@ -57,8 +57,8 @@ export class NetworkService {
   gateway = signal<{ip: string, latency: number} | null>(null);
 
   async getGatewayStats() {
-      const ipRes = await window.shieldApi.runScript('network-manager', ['-Action', 'GetPublicIP']) as { ip: string };
-      const latRes = await window.shieldApi.runScript('network-manager', ['-Action', 'TestLatency']) as { latency: number };
+      const ipRes = await (window as any).shieldApi.runScript('network-manager', ['-Action', 'GetPublicIP']) as { ip: string };
+      const latRes = await (window as any).shieldApi.runScript('network-manager', ['-Action', 'TestLatency']) as { latency: number };
       
       this.gateway.set({
           ip: ipRes.ip,
@@ -69,7 +69,7 @@ export class NetworkService {
   async setDNS(index: number, primary: string, secondary: string) {
     this.loading.set(true);
     try {
-      await window.shieldApi.runScript('network-manager', [
+      await (window as any).shieldApi.runScript('network-manager', [
         '-Action', 'SetDNS', 
         '-AdapterIndex', index.toString(),
         '-DNS1', primary,
@@ -84,13 +84,13 @@ export class NetworkService {
   }
 
   async repairNetwork() {
-    return await window.shieldApi.runScript('network-manager', ['-Action', 'Repair']);
+    return await (window as any).shieldApi.runScript('network-manager', ['-Action', 'Repair']);
   }
 
   async updateHosts() {
     this.loading.set(true);
     try {
-        await window.shieldApi.runScript('network-manager', ['-Action', 'UpdateHosts'], true); 
+        await (window as any).shieldApi.runScript('network-manager', ['-Action', 'UpdateHosts'], true); 
         // true for requiresAdmin, though standard runScript might implicitly suffice if main proc allows it. 
         // Actually runScript sig is (name, args, requiresAdmin?), let's pass true to be safe/explicit if supported.
     } catch (err) {
@@ -104,7 +104,7 @@ export class NetworkService {
   async resetHosts() {
     this.loading.set(true);
     try {
-        await window.shieldApi.runScript('network-manager', ['-Action', 'ResetHosts'], true);
+        await (window as any).shieldApi.runScript('network-manager', ['-Action', 'ResetHosts'], true);
     } catch (err) {
         console.error('Failed to reset hosts:', err);
         throw err;
@@ -115,15 +115,15 @@ export class NetworkService {
 
   async randomizeMac(index: number) {
       // Requires Admin
-      return await window.shieldApi.runScript('network-manager', ['-Action', 'SetMacAddress', '-AdapterIndex', index.toString()], true);
+      return await (window as any).shieldApi.runScript('network-manager', ['-Action', 'SetMacAddress', '-AdapterIndex', index.toString()], true);
   }
 
   async resetMac(index: number) {
       // Requires Admin
-      return await window.shieldApi.runScript('network-manager', ['-Action', 'ResetMacAddress', '-AdapterIndex', index.toString()], true);
+      return await (window as any).shieldApi.runScript('network-manager', ['-Action', 'ResetMacAddress', '-AdapterIndex', index.toString()], true);
   }
 
   async runPingTest() {
-      return await window.shieldApi.runScript('network-manager', ['-Action', 'PingTest']);
+      return await (window as any).shieldApi.runScript('network-manager', ['-Action', 'PingTest']);
   }
 }

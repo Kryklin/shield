@@ -29,7 +29,7 @@ export class SystemService {
     this.loading.set(true);
     try {
       // runScript normally returns the parsed JSON if the script output is JSON
-      const result = await window.shieldApi.runScript('get-system-info', []) as SystemInfo;
+      const result = await (window as any).shieldApi.runScript('get-system-info', []) as SystemInfo;
       this.info.set(result);
     } catch (err) {
       console.error('Failed to get system info:', err);

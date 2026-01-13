@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule, MAT_DIALOG_DATA, MatDialogRef } from '../../../modules/material/material-module';
@@ -25,13 +25,13 @@ export interface DialogData {
 })
 export class AppDialogComponent {
   inputResult = '';
+  
+  readonly dialogRef = inject(MatDialogRef<AppDialogComponent>);
+  readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
-  constructor(
-    public dialogRef: MatDialogRef<AppDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {
-    if (data.inputValue) {
-      this.inputResult = data.inputValue;
+  constructor() {
+    if (this.data.inputValue) {
+      this.inputResult = this.data.inputValue;
     }
   }
 

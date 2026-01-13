@@ -4,12 +4,20 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './public/favicon',
+    extraResource: [
+      './powershell'
+    ]
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        loadingGif: './public/splash_installer.gif',
+        setupIcon: './public/favicon.ico',
+        setupExe: 'Shield-Setup.exe'
+      },
     },
     {
       name: '@electron-forge/maker-zip',
@@ -41,4 +49,16 @@ module.exports = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'Kryklin',
+          name: 'shield'
+        },
+        prerelease: true
+      }
+    }
+  ]
 };

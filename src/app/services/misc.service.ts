@@ -134,7 +134,7 @@ export class MiscService {
     const mods = this.modules();
     const promises = mods.map(async (mod, index) => {
       try {
-        const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
+        const result = await (window as any).shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
         this.modules.update(current => {
           const updated = [...current];
           updated[index] = { ...updated[index], state: result, loading: false };
@@ -167,8 +167,8 @@ export class MiscService {
     const action = enable ? 'Enable' : 'Disable';
 
     try {
-      await window.shieldApi.runScript(mod.script, ['-Action', action], true);
-      const result = await window.shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
+      await (window as any).shieldApi.runScript(mod.script, ['-Action', action], true);
+      const result = await (window as any).shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
       
       this.modules.update(current => {
         const updated = [...current];

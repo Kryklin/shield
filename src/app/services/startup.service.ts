@@ -21,7 +21,7 @@ export class StartupService {
   async refresh() {
     this.loading.set(true);
     try {
-      const result = await window.shieldApi.runScript('startup-manager', ['-Action', 'GetStartup']) as StartupItem[] | StartupItem;
+      const result = await (window as any).shieldApi.runScript('startup-manager', ['-Action', 'GetStartup']) as StartupItem[] | StartupItem;
       this.items.set(Array.isArray(result) ? result : [result]);
     } catch (err) {
       console.error('Failed to get startup items:', err);
@@ -35,7 +35,7 @@ export class StartupService {
     
     this.loading.set(true);
     try {
-      await window.shieldApi.runScript('startup-manager', [
+      await (window as any).shieldApi.runScript('startup-manager', [
         '-Action', 'Remove', 
         '-Name', item.Name,
         '-Location', item.Location
@@ -52,7 +52,7 @@ export class StartupService {
       this.loading.set(true);
       try {
           // Re-using 'Location' param for path
-          await window.shieldApi.runScript('startup-manager', ['-Action', 'Add', '-Name', name, '-Location', path]);
+          await (window as any).shieldApi.runScript('startup-manager', ['-Action', 'Add', '-Name', name, '-Location', path]);
           await this.refresh();
       } catch (err) {
           console.error('Failed to add item:', err);
@@ -72,10 +72,10 @@ export class StartupService {
           const cleanPath = item.Command.replace(/"/g, ''); 
           // If it's complex, this might fail, but for simple startup items it works.
           
-          await window.shieldApi.runScript('startup-manager', ['-Action', 'AddDelayed', '-Name', item.Name, '-Location', cleanPath], true);
+          await (window as any).shieldApi.runScript('startup-manager', ['-Action', 'AddDelayed', '-Name', item.Name, '-Location', cleanPath], true);
           
           // 2. Remove original
-          await window.shieldApi.runScript('startup-manager', ['-Action', 'Remove', '-Name', item.Name, '-Location', item.Location]);
+          await (window as any).shieldApi.runScript('startup-manager', ['-Action', 'Remove', '-Name', item.Name, '-Location', item.Location]);
           
           await this.refresh();
           alert('Item moved to Delayed Startup successfully.');

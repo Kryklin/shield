@@ -13,7 +13,7 @@ export class BrowserService {
 
   async checkStatus() {
     try {
-        const res = await window.shieldApi.runScript('browser-manager', ['-Action', 'CheckStatus']) as {chrome: boolean, edge: boolean, firefox: boolean};
+        const res = await (window as any).shieldApi.runScript('browser-manager', ['-Action', 'CheckStatus']) as {chrome: boolean, edge: boolean, firefox: boolean};
         this.status.set(res);
     } catch (e) {
         console.error(e);
@@ -24,7 +24,7 @@ export class BrowserService {
     this.loading.set(true);
     try {
         // True for Admin
-        return await window.shieldApi.runScript('browser-manager', ['-Action', 'Harden', '-Browser', browser], true);
+        return await (window as any).shieldApi.runScript('browser-manager', ['-Action', 'Harden', '-Browser', browser], true);
     } finally {
         this.loading.set(false);
         this.checkStatus();

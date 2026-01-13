@@ -114,7 +114,7 @@ const pkg = require('../package.json');
       // Test: Runs headless Chrome tests
       TEST: 'ng test --watch=false --browsers=ChromeHeadless',
       // Build: Compiles Angular (Production) and Electron (TypeScript)
-      BUILD: 'ng build --configuration production --base-href ./ && tsc -p electron/tsconfig.json',
+      BUILD: 'ng build --configuration production --base-href ./ && tsc -p electron/tsconfig.json && npm run postbuild',
       // Dev: Runs Angular Serve, Electron Watch, and tsc (via Wrapper) concurrently
       DEV: 'cross-env NODE_ENV=development concurrently -k --success first "ng serve" "tsc -p electron/tsconfig.json --watch" "wait-on http://localhost:4200 && node scripts/dev-wrapper.js"',
       // Package: Packages the Electron app using Forge

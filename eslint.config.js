@@ -59,5 +59,11 @@ module.exports = defineConfig([
     rules: {
       "no-restricted-imports": "off"
     }
+  },
+  {
+    files: ["src/app/services/*.ts", "src/app/components/topnav/topnav.component.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off"
+    }
   }
 ]);

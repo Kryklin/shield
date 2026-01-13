@@ -1,3 +1,4 @@
+import { app } from 'electron';
 import { exec } from 'child_process';
 import * as path from 'path';
 import { promisify } from 'util';
@@ -5,7 +6,9 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 export class ScriptsManager {
-  private powershellPath = path.join(process.cwd(), 'powershell');
+  private powershellPath = app.isPackaged 
+    ? path.join(process.resourcesPath, 'powershell')
+    : path.join(process.cwd(), 'powershell');
   /**
   /**
    * Checks if the current process has Administrator privileges.

@@ -20,7 +20,7 @@ export class UpdateService {
   async refresh() {
     this.loading.set(true);
     try {
-        const res = await window.shieldApi.runScript('update-manager', ['-Action', 'Status']) as UpdateStatus;
+        const res = await (window as any).shieldApi.runScript('update-manager', ['-Action', 'Status']) as UpdateStatus;
         this.status.set(res);
     } finally {
         this.loading.set(false);
@@ -34,16 +34,16 @@ export class UpdateService {
     const isFrozen = current.startType === 'Disabled';
     const action = isFrozen ? 'Unfreeze' : 'Freeze';
     
-    await window.shieldApi.runScript('update-manager', ['-Action', action]);
+    await (window as any).shieldApi.runScript('update-manager', ['-Action', action]);
     await this.refresh();
   }
 
   async toggleDrivers() {
-    await window.shieldApi.runScript('update-manager', ['-Action', 'ToggleDrivers']);
+    await (window as any).shieldApi.runScript('update-manager', ['-Action', 'ToggleDrivers']);
     await this.refresh();
   }
 
   async clearCache() {
-     await window.shieldApi.runScript('update-manager', ['-Action', 'ClearCache']);
+     await (window as any).shieldApi.runScript('update-manager', ['-Action', 'ClearCache']);
   }
 }

@@ -11,4 +11,9 @@ contextBridge.exposeInMainWorld('shieldApi', {
   runScript: (scriptName: string, args: string[], requiresAdmin = false) => ipcRenderer.invoke('run-script', scriptName, args, requiresAdmin),
   checkAdminStatus: () => ipcRenderer.invoke('is-process-admin'),
   relaunchAsAdmin: () => ipcRenderer.invoke('relaunch-as-admin'),
+  // Auto-Update
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+  quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
+  onAutoUpdateStatus: (callback: (status: { status: string; releaseName?: string; error?: string }) => void) => 
+    ipcRenderer.on('auto-update-status', (_event, value) => callback(value)),
 });

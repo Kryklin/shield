@@ -20,5 +20,9 @@ export interface ShieldApi {
   runScript: (scriptName: string, args: string[], requiresAdmin?: boolean) => Promise<unknown>;
   checkAdminStatus: () => Promise<boolean>;
   relaunchAsAdmin: () => void;
+  // Auto-Update
+  checkForUpdates: () => Promise<void>;
+  quitAndInstall: () => Promise<void>;
+  onAutoUpdateStatus: (callback: (status: { status: string; releaseName?: string; error?: string }) => void) => void;
 }
 

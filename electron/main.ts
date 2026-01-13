@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, autoUpdater } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -7,6 +7,37 @@ import * as url from 'url';
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('update-electron-app')({
+  repo: 'Kryklin/shield',
+  updateInterval: '1 hour'
+});
+
+// Forward auto-updater events to renderer
+autoUpdater.on('checking-for-update', () => {
+    mainWindow?.webContents.send('auto-update-status', { status: 'checking' });
+});
+autoUpdater.on('update-available', () => {
+    mainWindow?.webContents.send('auto-update-status', { status: 'available' });
+});
+autoUpdater.on('update-not-available', () => {
+    mainWindow?.webContents.send('auto-update-status', { status: 'not-available' });
+});
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+    mainWindow?.webContents.send('auto-update-status', { status: 'downloaded', releaseName });
+});
+autoUpdater.on('error', (message) => {
+    mainWindow?.webContents.send('auto-update-status', { status: 'error', error: message });
+});
+
+// IPC for manual update control
+ipcMain.handle('check-for-updates', () => {
+   autoUpdater.checkForUpdates();
+});
+ipcMain.handle('quit-and-install', () => {
+   autoUpdater.quitAndInstall();
+});
 
 let mainWindow: BrowserWindow | null = null;
 const isDev = process.env['NODE_ENV'] === 'development';

@@ -8,7 +8,7 @@ export interface GithubRelease {
   body: string;
 }
 
-export type UpdateStatus = 'checking' | 'uptodate' | 'outdated' | 'error';
+export type UpdateStatus = 'checking' | 'uptodate' | 'outdated' | 'downloading' | 'downloaded' | 'error';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +18,43 @@ export class GithubService {
   private readonly REPO_NAME = 'shield';
   
   // Hardcoded for now, or could use environment
-  private readonly CURRENT_VERSION = '0.0.6';
+  private readonly CURRENT_VERSION = (window as any).shieldApi ? '0.0.7' : '0.0.6';
 
   latestRelease = signal<GithubRelease | null>(null);
   updateStatus = signal<UpdateStatus>('checking');
   error = signal<string | null>(null);
+  releaseNote = signal<string | null>(null);
 
+  constructor() {
+    this.initNativeUpdater();
+  }
+
+  private initNativeUpdater() {
+    if ((window as any).shieldApi) {
+        (window as any).shieldApi.onAutoUpdateStatus((info: any) => {
+            console.log('Update Status:', info);
+            switch (info.status) {
+                case 'checking':
+                    this.updateStatus.set('checking');
+                    break;
+                case 'available':
+                    this.updateStatus.set('downloading'); // Native updater auto-downloads
+                    break;
+                case 'not-available':
+                    this.updateStatus.set('uptodate');
+                    break;
+                case 'downloaded':
+                    this.updateStatus.set('downloaded');
+                    this.releaseNote.set(info.releaseName);
+                    break;
+                case 'error':
+                    this.updateStatus.set('error');
+                    this.error.set(info.error);
+                    break;
+            }
+        });
+    }
+  }
 
   /**
    * Semver comparison
@@ -53,6 +84,13 @@ export class GithubService {
     this.updateStatus.set('checking');
     this.error.set(null);
 
+    // Prefer native check if available (packaged app)
+    if ((window as any).shieldApi && (window as any).shieldApi.checkForUpdates) {
+        (window as any).shieldApi.checkForUpdates();
+        return;
+    }
+
+    // Fallback for Dev Mode / Web
     try {
       const response = await fetch(`https://api.github.com/repos/${this.REPO_OWNER}/${this.REPO_NAME}/releases/latest`);
       
@@ -76,6 +114,12 @@ export class GithubService {
       console.error('Failed to check for updates:', err);
       this.error.set(err instanceof Error ? err.message : String(err));
       this.updateStatus.set('error');
+    }
+  }
+
+  quitAndInstall() {
+    if ((window as any).shieldApi) {
+        (window as any).shieldApi.quitAndInstall();
     }
   }
 }

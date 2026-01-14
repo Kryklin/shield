@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="public/logo.png" width="150" alt="S.H.I.E.L.D. Logo">
+<img src="public/logo.png" width="500" alt="S.H.I.E.L.D. Logo">
 
 <br><br>
 

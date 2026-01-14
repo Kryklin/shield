@@ -1,69 +1,81 @@
 <div class="topnav">
   <div class="drag-region">
-    <app-logo size="32px"></app-logo>
-    <span class="app-title">System Hardening Interface for Enhanced Logical Defense</span>
+    <app-logo size="28px"></app-logo>
+    <div class="title-container">
+        <span class="app-title">SHIELD</span>
+        <span class="version-tag">v{{ github.CURRENT_VERSION }}</span>
+    </div>
   </div>
   
   <div class="window-controls">
-    <!-- Update Status -->
-    @switch (github.updateStatus()) {
-      @case ('checking') {
-         <div class="status-badge checking">
-           <mat-icon class="spin">sync</mat-icon>
-           <span>Checking...</span>
-         </div>
-      }
-      @case ('outdated') {
-         <a [href]="github.latestRelease()?.html_url" target="_blank" class="status-badge outdated">
-           <mat-icon>system_update</mat-icon>
-           <span>Update Available</span>
-         </a>
-      }
-      @case ('downloading') {
-         <div class="status-badge checking">
-           <mat-icon class="pulse">cloud_download</mat-icon>
-           <span>Downloading...</span>
-         </div>
-      }
-      @case ('downloaded') {
-         <button (click)="github.quitAndInstall()" class="status-badge outdated clickable">
-           <mat-icon>restart_alt</mat-icon>
-           <span>Restart to Update</span>
-         </button>
-      }
-      @case ('uptodate') {
-         <div class="status-badge uptodate">
-           <mat-icon>check_circle</mat-icon>
-           <span>Up to Date</span>
-         </div>
-      }
-      @case ('error') {
-        <div class="status-badge error" [title]="github.error()">
-           <mat-icon>wifi_off</mat-icon>
-           <span>Check Failed</span>
-        </div>
-      }
-    }
+    <!-- Admin Status -->
+    <div class="admin-indicator" 
+         [class.active]="isAdmin" 
+         [matMenuTriggerFor]="adminMenu"
+         #adminMenuTrigger="matMenuTrigger">
+        @if (isAdmin) {
+            <mat-icon class="shield-check">verified_user</mat-icon>
+            <span class="label">Admin Mode</span>
+        } @else {
+            <mat-icon class="shield-warn">gpp_maybe</mat-icon>
+            <span class="label">User Mode</span>
+        }
+    </div>
 
-    <button mat-icon-button 
-            (click)="toggleAdminMode()" 
-            [title]="isAdmin ? 'Running as Administrator' : 'Relaunch as Administrator'"
-            [class.admin-active]="isAdmin"
-            [class.admin-inactive]="!isAdmin"
-            [matMenuTriggerFor]="adminMenu"
-            #adminMenuTrigger="matMenuTrigger">
-      <mat-icon>{{ isAdmin ? 'verified_user' : 'gpp_maybe' }}</mat-icon>
-    </button>
-    
+    <!-- Update Status -->
+    <div class="update-indicator">
+        @switch (github.updateStatus()) {
+            @case ('checking') {
+                <div class="status-pill checking">
+                    <mat-icon class="spin-slow">sync</mat-icon>
+                </div>
+            }
+            @case ('downloading') {
+                 <div class="status-pill downloading">
+                    <mat-icon class="pulse-soft">download</mat-icon>
+                    <span class="text">Downloading Update...</span>
+                 </div>
+            }
+            @case ('downloaded') {
+                 <button (click)="github.quitAndInstall()" class="update-action-btn">
+                     <mat-icon>system_update</mat-icon>
+                     <span>Restart & Update</span>
+                     @if (github.releaseNote()) {
+                         <span class="version-pill">{{ github.releaseNote() }}</span>
+                     }
+                 </button>
+            }
+            @case ('outdated') {
+                <a [href]="github.latestRelease()?.html_url" target="_blank" class="status-pill outdated">
+                    <mat-icon>arrow_circle_up</mat-icon>
+                    <span>Update Available</span>
+                </a>
+            }
+            @case ('error') {
+                 <div class="status-pill error" [title]="github.error()">
+                    <mat-icon>wifi_off</mat-icon>
+                 </div>
+            }
+        }
+    </div>
+
     <mat-menu #adminMenu="matMenu" xPosition="before" class="glass-menu">
         <div class="admin-popup-content" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
-            <p><strong>Admin Access Required</strong></p>
-            <p>You can use this button to restart as Administrator.</p>
-            <p class="sub-text">Some commands require UAC elevation if you don't restart.</p>
-            <div class="actions">
-                <button mat-stroked-button color="warn" (click)="toggleAdminMode(); adminMenuTrigger.closeMenu()">Restart Admin</button>
-                <button mat-button (click)="adminMenuTrigger.closeMenu()">Dismiss</button>
+            <div class="header">
+                <mat-icon>{{ isAdmin ? 'verified_user' : 'gpp_maybe' }}</mat-icon>
+                <strong>{{ isAdmin ? 'Protected' : 'Limited Access' }}</strong>
             </div>
+            <p>Shield is running with {{ isAdmin ? 'full administrator privileges' : 'standard user privileges' }}.</p>
+            
+            @if (!isAdmin) {
+                <p class="sub-text">Many hardening features require Admin rights to modify system registry keys.</p>
+                <div class="actions">
+                    <button mat-flat-button color="warn" (click)="toggleAdminMode(); adminMenuTrigger.closeMenu()">
+                        <mat-icon>restart_alt</mat-icon>
+                        Relaunch as Admin
+                    </button>
+                </div>
+            }
         </div>
     </mat-menu>
   </div>

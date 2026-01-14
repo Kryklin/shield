@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../modules/material/material-module';
-import { UpdateService } from '../../services/update.service';
+import { WindowsUpdateService } from '../../services/windows-update.service';
 
 @Component({
   selector: 'app-update',
@@ -67,7 +67,7 @@ import { UpdateService } from '../../services/update.service';
   `]
 })
 export class UpdateComponent {
-    update = inject(UpdateService);
+    update = inject(WindowsUpdateService);
 
     isFrozen() {
         return this.update.status()?.startType === 'Disabled';

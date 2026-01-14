@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { ElectronService } from './electron.service';
 
 export interface UpdateStatus {
   status: string;
@@ -9,7 +10,8 @@ export interface UpdateStatus {
 @Injectable({
   providedIn: 'root'
 })
-export class UpdateService {
+export class WindowsUpdateService {
+  private electron = inject(ElectronService);
   status = signal<UpdateStatus | null>(null);
   loading = signal<boolean>(false);
 
@@ -20,7 +22,7 @@ export class UpdateService {
   async refresh() {
     this.loading.set(true);
     try {
-        const res = await (window as any).shieldApi.runScript('update-manager', ['-Action', 'Status']) as UpdateStatus;
+        const res = await this.electron.runScript('update-manager', ['-Action', 'Status']) as UpdateStatus;
         this.status.set(res);
     } finally {
         this.loading.set(false);
@@ -34,16 +36,16 @@ export class UpdateService {
     const isFrozen = current.startType === 'Disabled';
     const action = isFrozen ? 'Unfreeze' : 'Freeze';
     
-    await (window as any).shieldApi.runScript('update-manager', ['-Action', action]);
+    await this.electron.runScript('update-manager', ['-Action', action]);
     await this.refresh();
   }
 
   async toggleDrivers() {
-    await (window as any).shieldApi.runScript('update-manager', ['-Action', 'ToggleDrivers']);
+    await this.electron.runScript('update-manager', ['-Action', 'ToggleDrivers']);
     await this.refresh();
   }
 
   async clearCache() {
-     await (window as any).shieldApi.runScript('update-manager', ['-Action', 'ClearCache']);
+     await this.electron.runScript('update-manager', ['-Action', 'ClearCache']);
   }
 }

@@ -4,6 +4,7 @@ import { MaterialModule } from '../../modules/material/material-module';
 import { IconsModule } from '../../modules/icons/icons-module';
 import { LogoComponent } from '../logo/logo.component';
 import { GithubService } from '../../services/github.service';
+import { ElectronService } from '../../services/electron.service';
 
 @Component({
   selector: 'app-topnav',
@@ -17,9 +18,10 @@ export class TopnavComponent implements OnInit {
   @ViewChild('adminMenuTrigger') adminMenuTrigger!: MatMenuTrigger;
 
   github = inject(GithubService);
+  private electron = inject(ElectronService);
 
   async ngOnInit() {
-    this.isAdmin = await (window as any).shieldApi.checkAdminStatus();
+    this.isAdmin = await this.electron.checkAdminStatus();
     
     // Check for updates on load
     this.github.checkLatestVersion();
@@ -34,9 +36,9 @@ export class TopnavComponent implements OnInit {
     }
   }
 
-  async toggleAdminMode() {
+  toggleAdminMode() {
     if (!this.isAdmin) {
-      await (window as any).shieldApi.relaunchAsAdmin();
+      this.electron.relaunchAsAdmin();
     }
   }
 }

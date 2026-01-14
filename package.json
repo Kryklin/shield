@@ -1,6 +1,6 @@
 {
   "name": "shield",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "productName": "Shield",
   "main": "dist/electron/main.js",
   "description": "System Hardening Interface for Enhanced Logical Defense",
@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node scripts/package.js",
     "build": "ng build",
+    "test": "ng test --watch=false --browsers=ChromeHeadless",
     "postbuild": "xcopy /E /I /Y powershell dist\\electron\\powershell",
     "lint": "ng lint"
   },

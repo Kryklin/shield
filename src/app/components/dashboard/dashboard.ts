@@ -6,7 +6,7 @@ import { DebloatService, DebloatModule } from '../../services/debloat.service';
 import { SystemService } from '../../services/system.service';
 import { NetworkService } from '../../services/network.service';
 import { StartupService } from '../../services/startup.service';
-import { UpdateService } from '../../services/update.service';
+import { WindowsUpdateService } from '../../services/windows-update.service';
 import { StorageService } from '../../services/storage.service';
 import { BatteryService } from '../../services/battery.service';
 import { RouterModule } from '@angular/router';
@@ -28,7 +28,7 @@ export class DashboardComponent {
   // New Services
   network = inject(NetworkService);
   startup = inject(StartupService);
-  update = inject(UpdateService);
+  update = inject(WindowsUpdateService);
   storage = inject(StorageService);
   battery = inject(BatteryService);
 

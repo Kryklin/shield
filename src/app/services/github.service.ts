@@ -1,125 +1,107 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ElectronService } from './electron.service';
 
 export interface GithubRelease {
   tag_name: string;
   html_url: string;
-  published_at: string;
-  name: string;
   body: string;
+  published_at: string;
 }
 
-export type UpdateStatus = 'checking' | 'uptodate' | 'outdated' | 'downloading' | 'downloaded' | 'error';
+export type UpdateStatus = 'checking' | 'uptodate' | 'outdated' | 'error' | 'downloading' | 'downloaded';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GithubService {
-  private readonly REPO_OWNER = 'Kryklin';
-  private readonly REPO_NAME = 'shield';
+  private http = inject(HttpClient);
+  private electron = inject(ElectronService);
   
-  // Hardcoded for now, or could use environment
-  private readonly CURRENT_VERSION = (window as any).shieldApi ? '0.0.7' : '0.0.6';
+  // Packaged app version. In dev, we might match package.json or mock it.
+  readonly CURRENT_VERSION = '0.0.8';
+  readonly REPO = 'Kryklin/shield';
 
-  latestRelease = signal<GithubRelease | null>(null);
   updateStatus = signal<UpdateStatus>('checking');
-  error = signal<string | null>(null);
+  latestRelease = signal<GithubRelease | null>(null);
   releaseNote = signal<string | null>(null);
+  error = signal<string | null>(null);
 
   constructor() {
+    this.checkLatestVersion();
     this.initNativeUpdater();
   }
 
-  private initNativeUpdater() {
-    if ((window as any).shieldApi) {
-        (window as any).shieldApi.onAutoUpdateStatus((info: any) => {
-            console.log('Update Status:', info);
-            switch (info.status) {
-                case 'checking':
-                    this.updateStatus.set('checking');
-                    break;
-                case 'available':
-                    this.updateStatus.set('downloading'); // Native updater auto-downloads
-                    break;
-                case 'not-available':
-                    this.updateStatus.set('uptodate');
-                    break;
-                case 'downloaded':
-                    this.updateStatus.set('downloaded');
-                    this.releaseNote.set(info.releaseName);
-                    break;
-                case 'error':
-                    this.updateStatus.set('error');
-                    this.error.set(info.error);
-                    break;
-            }
-        });
-    }
-  }
-
   /**
-   * Semver comparison
-   * Returns:
-   *  1 if v1 > v2
-   * -1 if v1 < v2
-   *  0 if v1 == v2
+   * Listen for native squirrel events from main process
    */
-  compareVersions(v1: string, v2: string): number {
-    const cleanV1 = v1.replace(/^v/, '');
-    const cleanV2 = v2.replace(/^v/, '');
-    
-    const parts1 = cleanV1.split('.').map(Number);
-    const parts2 = cleanV2.split('.').map(Number);
-    
-    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
-      const p1 = parts1[i] || 0;
-      const p2 = parts2[i] || 0;
-      
-      if (p1 > p2) return 1;
-      if (p1 < p2) return -1;
-    }
-    return 0;
+  private initNativeUpdater() {
+      // If we are in the browser, this will do nothing (safe)
+      this.electron.onAutoUpdateStatus((event) => {
+          console.log('Native Update Status:', event);
+
+          switch (event.status) {
+              case 'checking':
+                  this.updateStatus.set('checking');
+                  break;
+              case 'available':
+                  this.updateStatus.set('downloading'); // Squirrel auto-downloads
+                  break;
+              case 'not-available':
+                  this.updateStatus.set('uptodate');
+                  break;
+              case 'downloaded':
+                  this.updateStatus.set('downloaded');
+                  this.releaseNote.set(event.releaseName || 'New Version');
+                  break;
+              case 'error':
+                  this.updateStatus.set('error');
+                  this.error.set(event.error || 'Unknown update error');
+                  break;
+          }
+      });
   }
 
   async checkLatestVersion() {
     this.updateStatus.set('checking');
     this.error.set(null);
 
-    // Prefer native check if available (packaged app)
-    if ((window as any).shieldApi && (window as any).shieldApi.checkForUpdates) {
-        (window as any).shieldApi.checkForUpdates();
-        return;
+    // 1. If running in Electron (packaged), prefer the native auto-updater
+    if (this.electron.isElectron) {
+       this.electron.checkForUpdates();
+       return; 
     }
 
-    // Fallback for Dev Mode / Web
-    try {
-      const response = await fetch(`https://api.github.com/repos/${this.REPO_OWNER}/${this.REPO_NAME}/releases/latest`);
-      
-      if (!response.ok) {
-        throw new Error(`GitHub API Error: ${response.statusText}`);
-      }
-
-      const release: GithubRelease = await response.json();
-      this.latestRelease.set(release);
-
-      const comparison = this.compareVersions(release.tag_name, this.CURRENT_VERSION);
-      
-      // If latest > current => outdated
-      if (comparison > 0) {
-        this.updateStatus.set('outdated');
-      } else {
-        this.updateStatus.set('uptodate');
-      }
-
-    } catch (err: unknown) {
-      console.error('Failed to check for updates:', err);
-      this.error.set(err instanceof Error ? err.message : String(err));
-      this.updateStatus.set('error');
-    }
+    // 2. Fallback for Web/Dev: Check GitHub API directly
+    this.http.get<GithubRelease>(`https://api.github.com/repos/${this.REPO}/releases/latest`)
+      .subscribe({
+        next: (release) => {
+          this.latestRelease.set(release);
+          const hasUpdate = this.compareVersions(this.CURRENT_VERSION, release.tag_name);
+          this.updateStatus.set(hasUpdate ? 'outdated' : 'uptodate');
+        },
+        error: (err) => {
+          console.error('Failed to check github', err);
+          this.updateStatus.set('error');
+          this.error.set(err.message);
+        }
+      });
   }
 
   quitAndInstall() {
-    if ((window as any).shieldApi) {
-        (window as any).shieldApi.quitAndInstall();
+      if (this.electron.isElectron) {
+          this.electron.quitAndInstall();
+      }
+  }
+
+  private compareVersions(current: string, latest: string): boolean {
+    const c = current.replace('v', '').split('.').map(Number);
+    const l = latest.replace('v', '').split('.').map(Number);
+
+    for (let i = 0; i < 3; i++) {
+      if (l[i] > c[i]) return true;
+      if (l[i] < c[i]) return false;
     }
+    return false;
   }
 }

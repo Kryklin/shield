@@ -38,6 +38,11 @@ body {
   transition: background 0.5s ease, color 0.5s ease;
 }
 
+// Global Reset
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 // Global Glass Class
 .glass-panel {
   // Use mixin directly to avoid cross-module extend issues

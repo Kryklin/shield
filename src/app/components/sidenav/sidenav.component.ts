@@ -37,6 +37,8 @@ export class SidenavComponent {
         icon: 'build',
         expanded: false,
         items: [
+          { title: 'App Store', icon: 'shopping_bag', route: '/software' },
+          { title: 'God Mode', icon: 'bolt', route: '/tools' },
           { title: 'Storage', icon: 'storage', route: '/storage' },
           { title: 'Startup', icon: 'rocket_launch', route: '/startup' },
           ...(isLaptop ? [{ title: 'Power Management', icon: 'battery_charging_full', route: '/battery' }] : [])

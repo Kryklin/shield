@@ -72,4 +72,28 @@ export class NetworkComponent {
         }
       }
   }
+  async newIdentity() {
+      if (await this.ui.confirm({ 
+          title: 'Activate Kill Switch?', 
+          message: 'This will randomize your MAC address, flush DNS, release/renew IP, and reset Winsock. Your connection will drop briefly. Continue?',
+          isDestructive: true 
+      })) {
+          // 1. Randomize MAC for all active adapters
+          const adapters = this.network.adapters();
+          let macSuccess = false;
+          
+          for (const nic of adapters) {
+              const res = await this.network.randomizeMac(nic.index) as { success: boolean };
+              if (res.success) macSuccess = true;
+          }
+
+          // 2. Repair Network (Flush DNS, IP)
+          const repairRes = await this.network.repairNetwork() as { success: boolean, message?: string };
+          
+          this.ui.showSnackBar(`Identity Reset: MAC ${macSuccess ? 'Randomized' : 'Unchanged'}, ${repairRes.message}`);
+          
+          // Refresh
+          setTimeout(() => this.network.refresh(), 5000);
+      }
+  }
 }

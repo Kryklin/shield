@@ -15,4 +15,6 @@ export const routes: Routes = [
   { path: 'battery', loadComponent: () => import('./components/battery/battery.component').then(m => m.BatteryComponent) },
   { path: 'browser', loadComponent: () => import('./components/browser/browser.component').then(m => m.BrowserComponent) },
   { path: 'settings', loadComponent: () => import('./components/settings/settings.component').then(m => m.SettingsComponent) },
+  { path: 'software', loadComponent: () => import('./components/software/software.component').then(m => m.SoftwareComponent) },
+  { path: 'tools', loadComponent: () => import('./components/tools/tools.component').then(m => m.ToolsComponent) },
 ];

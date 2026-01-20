@@ -100,7 +100,25 @@
         </div>
     }
 
-    <!-- Repair Zone -->
+    <!-- Identity & Privacy Zone -->
+    <div class="glass-panel repair-card full-width" style="margin-top: 20px; border-color: rgba(255, 23, 68, 0.3);">
+        <div class="repair-content">
+            <div class="repair-text">
+                <h3 style="color: #ff1744;">Identity Kill Switch</h3>
+                <p>Instantly randomize your digital fingerprint. Spoofs MAC address, flushes DNS cache, rotates IP address, and clears tracking states.</p>
+            </div>
+            <div class="hosts-actions">
+                <button mat-flat-button color="warn" (click)="newIdentity()">
+                    <mat-icon>fingerprint_off</mat-icon>
+                    NEW IDENTITY
+                </button>
+                <button mat-stroked-button (click)="repair()">
+                     <mat-icon>build</mat-icon>
+                     REPAIR STACK
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- AdBlock Zone -->
     <div class="glass-panel repair-card full-width" style="margin-top: 20px;">

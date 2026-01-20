@@ -28,6 +28,13 @@
             <button mat-mini-fab color="primary" class="add-btn" (click)="toggleCreateMode()" matTooltip="Save Current Settings as Profile">
                 <mat-icon>add</mat-icon>
             </button>
+            
+            <button mat-icon-button (click)="exportProfile()" matTooltip="Export Profile" style="margin-left: 8px">
+                <mat-icon>upload</mat-icon>
+            </button>
+            <button mat-icon-button (click)="importProfileFromFile()" matTooltip="Import Profile">
+                <mat-icon>download</mat-icon>
+            </button>
         } @else {
             <div class="create-profile-form">
                 <mat-form-field appearance="outline" class="new-name-input">

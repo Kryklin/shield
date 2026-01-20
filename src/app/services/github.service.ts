@@ -19,7 +19,8 @@ export class GithubService {
   private electron = inject(ElectronService);
   
   // Packaged app version. In dev, we might match package.json or mock it.
-  readonly CURRENT_VERSION = '0.0.8';
+  // NOTE: This must match package.json version
+  readonly CURRENT_VERSION = '1.2.0';
   readonly REPO = 'Kryklin/shield';
 
   updateStatus = signal<UpdateStatus>('checking');
@@ -66,7 +67,13 @@ export class GithubService {
 
     // 1. If running in Electron (packaged), prefer the native auto-updater
     if (this.electron.isElectron) {
-       this.electron.checkForUpdates();
+       try {
+           this.electron.checkForUpdates();
+       } catch (err) {
+           console.error('Auto-update failed to start:', err);
+           // Don't show error to user immediately, just fallback or log
+           this.updateStatus.set('error');
+       }
        return; 
     }
 

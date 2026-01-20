@@ -59,7 +59,7 @@
   align-items: center;
   align-items: center;
   padding-right: 0; // Custom controls are flush
-  gap: 0; // No gap between window buttons
+  gap: 12px; // Increased gap for better spacing
 
   // Theme Toggle Button
   .theme-toggle {
@@ -215,7 +215,7 @@
       align-items: center;
       height: 100%;
       -webkit-app-region: no-drag; // Critical: clickable
-      margin-left: 16px;
+      margin-left: 8px; // Separator from status indicators
 
       .win-btn {
           height: 100%;

@@ -28,4 +28,40 @@ export class UiService {
     const result = await dialogRef.afterClosed().toPromise();
     return !!result;
   }
+
+  downloadJson(data: any, filename: string) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  readJsonFile(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e: any) => {
+        const file = e.target.files[0];
+        if (!file) {
+           resolve(null);
+           return;
+        }
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          try {
+             const json = JSON.parse(evt.target?.result as string);
+             resolve(json);
+          } catch {
+             reject('Invalid JSON file');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    });
+  }
 }

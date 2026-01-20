@@ -3,6 +3,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MaterialModule } from '../../modules/material/material-module';
 import { HardeningService } from '../../services/hardening.service';
+import { UiService } from '../../services/ui.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatExpansionPanel } from '../../modules/material/material-module';
 
@@ -88,6 +89,30 @@ export class HardeningComponent implements AfterViewInit {
           // Handle duplicate
           if (result.duplicateOf) {
               alert(`Cannot create profile. These settings match the existing profile: "${result.duplicateOf}".\n\nPlease adjust settings or use the existing profile.`);
+          }
+      }
+  }
+
+  ui = inject(UiService);
+
+  exportProfile() {
+      const profileId = this.selectedProfileControl.value;
+      const profile = this.hardeningService.profiles().find(p => p.id === profileId);
+      if (profile) {
+          this.ui.downloadJson(profile, `shield-profile-${profile.name.replace(/\s+/g, '-')}.json`);
+      }
+  }
+
+  async importProfileFromFile() {
+      const data = await this.ui.readJsonFile();
+      if (data) {
+          const res = this.hardeningService.importProfile(data);
+          if (res.success) {
+               const active = this.hardeningService.activeProfileId();
+               if (active) this.selectedProfileControl.setValue(active);
+               this.ui.showSnackBar(res.message);
+          } else {
+              this.ui.showSnackBar(res.message);
           }
       }
   }

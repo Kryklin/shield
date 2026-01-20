@@ -107,6 +107,30 @@ export class HardeningService {
       return { success: true };
   }
 
+  importProfile(data: any): { success: boolean, message: string } {
+      // Basic Validation
+      if (!data || !data.settings || typeof data.name !== 'string') {
+          return { success: false, message: 'Invalid profile format' };
+      }
+
+      const importedProfile: HardeningProfile = {
+          id: crypto.randomUUID(),
+          name: data.name + ' (Imported)',
+          isSystem: false,
+          settings: data.settings
+      };
+
+      const userProfiles = this.profiles().filter(p => !p.isSystem);
+      const profileList = [...userProfiles, importedProfile];
+      
+      localStorage.setItem('shield_profiles', JSON.stringify(profileList));
+      this.loadProfiles();
+      this.activeProfileId.set(importedProfile.id);
+      
+      return { success: true, message: `Imported "${importedProfile.name}"` };
+  }
+
+
   private captureCurrentSettings(): Record<string, boolean> {
       const settings: Record<string, boolean> = {};
       this.modules().forEach(m => {

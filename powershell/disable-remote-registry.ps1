@@ -6,10 +6,10 @@ function Get-Status {
     $service = Get-Service -Name "RemoteRegistry" -ErrorAction SilentlyContinue
     if ($service) {
         if ($service.StartType -eq 'Disabled' -and $service.Status -eq 'Stopped') {
-            return @{ enabled = $false; status = "Safe"; details = "Remote Registry is disabled" }
+            return @{ enabled = $true; status = "Safe"; details = "Remote Registry is disabled" }
         }
     }
-    return @{ enabled = $true; status = "At Risk"; details = "Remote Registry is enabled" }
+    return @{ enabled = $false; status = "At Risk"; details = "Remote Registry is enabled" }
 }
 
 function Enable-Feature {

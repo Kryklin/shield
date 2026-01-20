@@ -107,17 +107,20 @@ export class HardeningService {
       return { success: true };
   }
 
+  // Data comes from file input, so it is implicitly any until we validate
   importProfile(data: any): { success: boolean, message: string } {
       // Basic Validation
-      if (!data || !data.settings || typeof data.name !== 'string') {
+      const candidate = data as Partial<HardeningProfile>;
+      
+      if (!candidate || !candidate.settings || typeof candidate.name !== 'string') {
           return { success: false, message: 'Invalid profile format' };
       }
 
       const importedProfile: HardeningProfile = {
           id: crypto.randomUUID(),
-          name: data.name + ' (Imported)',
+          name: candidate.name + ' (Imported)',
           isSystem: false,
-          settings: data.settings
+          settings: candidate.settings as Record<string, boolean>
       };
 
       const userProfiles = this.profiles().filter(p => !p.isSystem);

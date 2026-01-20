@@ -11,7 +11,7 @@ export class ElectronService {
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
-      this._api = (window as any).shieldApi;
+      this._api = (window as unknown as { shieldApi: ShieldApi }).shieldApi;
     }
   }
 

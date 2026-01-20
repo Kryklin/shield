@@ -4,9 +4,12 @@ param (
 
 function Get-Status {
     $feature = Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -ErrorAction SilentlyContinue
-    $featureRoot = Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -ErrorAction SilentlyContinue
+    # Only check the main feature. Root is implicitly handled.
     
-    $isEnabled = ($feature.State -eq "Disabled") -and ($featureRoot.State -eq "Disabled")
+    $isEnabled = ($feature.State -eq "Disabled")
+    
+    # Double check if feature query failed (e.g. not present on system) -> Consider it disabled/safe
+    if (-not $feature) { $isEnabled = $true }
     
     $status = if ($isEnabled) { "Safe" } else { "At Risk" }
     

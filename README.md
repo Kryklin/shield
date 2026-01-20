@@ -6,7 +6,7 @@
 
 <br><br>
 
-![Version](https://img.shields.io/badge/Version-1.0.0-green?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.2.1-green?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Stable-brightgreen?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 
@@ -26,12 +26,15 @@
 ## ✨ Key Features
 
 - **🔒 Ultimate Hardening**: One-click lockdown of security vulnerabilities, registry hardening, and firewall optimization.
+- **📦 App Store (Winget UI)**: Native interface for the Windows Package Manager. Search, install, and manage software packages securely. Includes an "Essentials" section for bulk Ninite-style installations.
+- **⚡ God Mode**: Advanced dashboard giving you instant access to 25+ administrative system tools (RegEdit, Group Policy, Services, etc.) in one place.
+- **👻 Identity Kill Switch**: Instant MAC Address randomization and network stack flush (DNS/IP) to completely refresh your digital fingerprint.
+- **💾 Configuration Portability**: Export and Import your system hardening profiles JSON files. Share configurations or back them up with ease.
 - **🚀 Instant Load Technology**: Persistent JSON state caching ensures near-instant startup for hardening modules.
 - **🌗 Dark / Light Mode**: Beautiful glassmorphism UI with a dynamic red (stealth) and blue (corporate) theme toggle.
 - **🚀 Auto-Updating**: Seamless background updates via GitHub Releases.
 - **🛡️ Admin Mode**: Smart privilege detection with "Relaunch as Admin" capability.
-- **🧹 System Decluttering**: Remove telemetry, bloatware, and unnecessary background services.
-- **⚡ Real-time Telemetry**: Live monitoring of system security score and threat level.
+- **🧹 System Debloat**: Remove telemetry, bloatware, and unnecessary background services.
 
 ## 🛠️ Architecture
 

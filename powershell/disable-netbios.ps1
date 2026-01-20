@@ -21,8 +21,9 @@ function Get-Status {
     # Better approach for this script: We'll check the majority of adapters via WMI/CIM.
     
     try {
-        $wmi = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "TcpipNetbiosOptions != 2"
-        $isHardened = ($wmi.Count -eq 0) # If count is 0, all are 2 (Disabled)
+        $wmi = @(Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "TcpipNetbiosOptions != 2" -ErrorAction SilentlyContinue)
+        # If wmi is null or empty, it means NO adapters have options != 2 (so all are disabled/2)
+        $isHardened = ($wmi.Count -eq 0)
     }
     catch {
         $isHardened = $false

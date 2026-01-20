@@ -20,7 +20,7 @@ export class GithubService {
   
   // Packaged app version. In dev, we might match package.json or mock it.
   // NOTE: This must match package.json version
-  readonly CURRENT_VERSION = '1.2.0';
+  readonly CURRENT_VERSION = '1.2.1';
   readonly REPO = 'Kryklin/shield';
 
   updateStatus = signal<UpdateStatus>('checking');

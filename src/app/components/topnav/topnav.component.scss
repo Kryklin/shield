@@ -3,8 +3,8 @@
 .topnav {
   height: 54px; // Increased height slightly
   @include glass.glass(0.65, 12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--mat-sys-on-surface);
+  border-bottom: 1px solid var(--sys-border);
+  color: var(--sys-text-primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12,6 +12,7 @@
   z-index: 1000;
   position: relative;
   transition: background 0.3s ease;
+  background: var(--sys-surface-glass);
 }
 
 .drag-region {
@@ -24,7 +25,7 @@
   gap: 16px;
 
   app-logo {
-     filter: drop-shadow(0 0 8px rgba(var(--mat-sys-primary-rgb), 0.3));
+     filter: drop-shadow(0 0 8px var(--sys-primary-dim));
   }
 
   .title-container {
@@ -37,7 +38,7 @@
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 2px;
-    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    background: linear-gradient(135deg, var(--sys-text-primary) 0%, var(--sys-text-secondary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -47,6 +48,7 @@
       opacity: 0.5;
       font-family: 'JetBrains Mono', monospace;
       letter-spacing: 0.5px;
+      color: var(--sys-text-tertiary);
   }
 }
 
@@ -55,8 +57,18 @@
   height: 100%;
   -webkit-app-region: no-drag;
   align-items: center;
-  padding-right: 150px; // Space for native window controls
-  gap: 16px;
+  align-items: center;
+  padding-right: 0; // Custom controls are flush
+  gap: 0; // No gap between window buttons
+
+  // Theme Toggle Button
+  .theme-toggle {
+      color: var(--sys-text-secondary);
+      &:hover {
+          color: var(--sys-text-primary);
+          background: var(--sys-border-light);
+      }
+  }
 
   // Admin Indicator
   .admin-indicator {
@@ -79,6 +91,7 @@
           font-size: 12px;
           font-weight: 500;
           opacity: 0.9;
+          color: var(--sys-text-primary);
       }
 
       &.active {
@@ -122,8 +135,9 @@
           padding: 6px 10px;
           border-radius: 20px;
           font-size: 12px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.05);
+          background: var(--sys-border-light);
+          border: 1px solid var(--sys-border);
+          color: var(--sys-text-secondary);
           
           mat-icon {
               font-size: 16px;
@@ -133,24 +147,24 @@
           }
 
           &.outdated {
-              background: rgba(var(--mat-sys-tertiary-rgb), 0.15);
-              color: var(--mat-sys-tertiary);
+              background: rgba(41, 121, 255, 0.15); // Use generic blue hint
+              color: var(--sys-primary);
               text-decoration: none;
-              border-color: rgba(var(--mat-sys-tertiary-rgb), 0.3);
+              border-color: var(--sys-primary-dim);
               cursor: pointer;
               
               mat-icon { opacity: 1; }
               &:hover {
-                  background: rgba(var(--mat-sys-tertiary-rgb), 0.25);
+                  background: var(--sys-primary-dim);
               }
           }
           
           &.downloading {
-               color: var(--mat-sys-secondary);
+               color: var(--sys-text-primary);
           }
           
           &.error {
-              color: var(--mat-sys-error);
+              color: #ff1744;
           }
       }
 
@@ -162,17 +176,17 @@
           padding: 0 16px;
           border-radius: 16px;
           border: none;
-          background: var(--mat-sys-primary);
-          color: var(--mat-sys-on-primary);
+          background: var(--sys-primary);
+          color: white; // Always white on primary
           font-size: 12px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
-          box-shadow: 0 2px 8px rgba(var(--mat-sys-primary-rgb), 0.3);
+          box-shadow: 0 2px 8px var(--sys-primary-dim);
 
           &:hover {
               transform: translateY(-1px);
-              box-shadow: 0 4px 12px rgba(var(--mat-sys-primary-rgb), 0.5);
+              box-shadow: 0 4px 12px var(--sys-primary-dim);
               filter: brightness(1.1);
           }
           
@@ -192,6 +206,43 @@
               border-radius: 4px;
               font-size: 10px;
               margin-left: 4px;
+          }
+      }
+  }
+  // Window Controls (Custom)
+  .window-actions {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      -webkit-app-region: no-drag; // Critical: clickable
+      margin-left: 16px;
+
+      .win-btn {
+          height: 100%;
+          width: 46px;
+          border: none;
+          background: transparent;
+          color: var(--sys-text-secondary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s;
+          
+          mat-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+          }
+
+          &:hover {
+              background: var(--sys-border-light);
+              color: var(--sys-text-primary);
+          }
+
+          &.close:hover {
+              background: #ff1744;
+              color: white;
           }
       }
   }
@@ -223,10 +274,10 @@
 
 // Menu Styling
 ::ng-deep .glass-menu {
-    background: rgba(30, 30, 35, 0.95);
+    background: var(--sys-surface-glass) !important;
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--sys-border) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     padding: 0;
     
@@ -239,7 +290,7 @@
     width: 280px;
     padding: 20px;
     outline: none;
-    color: #ffffff; // Force white text
+    color: var(--sys-text-primary); // Dynamic text color
     overflow: hidden; // Prevent internal scrollbars
     
     .header {
@@ -250,7 +301,7 @@
         font-size: 1.1rem;
         
         mat-icon {
-            color: var(--mat-sys-primary); // or dynamic based on state
+            color: var(--sys-primary);
         }
     }
     
@@ -259,18 +310,18 @@
         font-size: 0.9rem;
         line-height: 1.5;
         opacity: 0.9;
-        color: #ffffff; // Ensure paragraphs are white
+        color: var(--sys-text-primary); 
     }
     
     .sub-text {
         font-size: 0.8rem;
-        opacity: 0.9; // Increased opacity for readability
-        background: rgba(255,255,255,0.1); // Slightly lighter background
+        opacity: 0.9; 
+        background: var(--sys-border-light);
         padding: 10px;
         border-radius: 8px;
         margin-top: 12px;
-        color: rgba(255, 255, 255, 0.9); // Explicit light color
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--sys-text-secondary);
+        border: 1px solid var(--sys-border);
     }
     
     .actions {

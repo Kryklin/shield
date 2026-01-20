@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { StateService } from './state.service';
 
 export interface HardeningStatus {
   enabled: boolean;
@@ -20,6 +21,8 @@ export interface DebloatModule {
   providedIn: 'root'
 })
 export class DebloatService {
+  private stateService = inject(StateService);
+
   modules = signal<DebloatModule[]>([
     { 
       id: 'onedrive', 
@@ -119,9 +122,25 @@ export class DebloatService {
 
   async refreshAll() {
     const mods = this.modules();
-    const promises = mods.map(async (mod, index) => {
+    mods.map(async (mod, index) => {
+      // 1. Try Cache First (Instant Load)
+      const cached = this.stateService.getState('debloat-' + mod.id);
+      if (cached) {
+          this.modules.update(current => {
+              const updated = [...current];
+              updated[index] = { ...updated[index], state: cached as HardeningStatus, loading: false };
+              return updated;
+          });
+          return;
+      }
+
+      // 2. Fallback to System Query
       try {
         const result = await (window as any).shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
+        
+        // Update Cache
+        this.stateService.updateState('debloat-' + mod.id, result);
+
         this.modules.update(current => {
           const updated = [...current];
           updated[index] = { ...updated[index], state: result, loading: false };
@@ -136,7 +155,9 @@ export class DebloatService {
         });
       }
     });
-    await Promise.all(promises);
+    
+    // We don't await the entire batch if we want progressive loading, but for now we let them run
+    // Since we update signals individually, UI will update progressively
   }
 
   async toggleModule(moduleId: string, enable: boolean) {
@@ -157,6 +178,9 @@ export class DebloatService {
     try {
       await (window as any).shieldApi.runScript(mod.script, ['-Action', action], true);
       const result = await (window as any).shieldApi.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
+      
+      // Update Cache
+      this.stateService.updateState('debloat-' + mod.id, result);
       
       this.modules.update(current => {
         const updated = [...current];

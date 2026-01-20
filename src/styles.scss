@@ -2,40 +2,132 @@
 @use './app/styles/glass' as ui-glass;
 @use '@angular/material' as mat;
 
-// Include theming for Angular Material with `mat.theme()`.
+// Define Light Theme
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+));
 
+// Define Dark Theme
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+));
+
+// Default: Dark Theme (Rest strict to html/body manually via class)
 html {
   @include mat.theme((
     color: (
-      theme-type: dark, // Enforce dark mode globally
+      theme-type: dark,
       primary: mat.$azure-palette,
       tertiary: mat.$blue-palette,
     ),
-    typography: Roboto,
-    density: 0,
   ));
 }
 
 html, body { height: 100%; }
 
 body {
-  color-scheme: dark; // Strict enforcement
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-
-  // Stealth Black Background
-  // Stealth Void Background (Animated for Glass Effect)
-  background: linear-gradient(-45deg, 
-    #000000, 
-    #1a1a1a, 
-    #0d0d0d, 
-    #141414
-  );
-  background-size: 400% 400%;
-  animation: drift 15s ease infinite;
-
-  // Smooth Theme Transitions
   transition: background 0.5s ease, color 0.5s ease;
+  
+  // --- CSS Variable Definitions ---
+  // Default (Dark Mode)
+  --sys-primary: #ff1744; // Red for Dark Mode
+  --sys-primary-dim: rgba(255, 23, 68, 0.4);
+  --sys-bg-grad-1: #000000;
+  --sys-bg-grad-2: #1a1a1a;
+  --sys-bg-grad-3: #0d0d0d;
+  --sys-surface-glass: rgba(20, 20, 20, 0.85);
+  --sys-surface-glass-dim: rgba(30, 30, 30, 0.6);
+  --sys-border: rgba(255, 255, 255, 0.08);
+  --sys-border-light: rgba(255, 255, 255, 0.05);
+  --sys-text-primary: rgba(255, 255, 255, 0.95);
+  --sys-text-secondary: rgba(255, 255, 255, 0.7);
+  --sys-text-tertiary: rgba(255, 255, 255, 0.5);
+  --sys-text-hint: rgba(255, 255, 255, 0.3);
+  --sys-scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --sys-scrollbar-track: rgba(0, 0, 0, 0.2);
+
+  // --- Dark Mode (Default) ---
+  &.dark-theme {
+    color-scheme: dark;
+    @include mat.theme($dark-theme);
+    
+    // Stealth Void Background
+    background: linear-gradient(-45deg, 
+      var(--sys-bg-grad-1), 
+      var(--sys-bg-grad-2), 
+      var(--sys-bg-grad-3), 
+      #141414
+    );
+    background-size: 400% 400%;
+    animation: drift 15s ease infinite;
+    color: var(--sys-text-primary);
+  }
+
+  // --- Light Mode ---
+  &.light-theme {
+    color-scheme: light;
+    @include mat.theme($light-theme);
+
+    // Override Variables for Light Mode
+    --sys-primary: #2979ff; // Blue for Light Mode
+    --sys-primary-dim: rgba(41, 121, 255, 0.4);
+    --sys-bg-grad-1: #f3f6fa;
+    --sys-bg-grad-2: #e3eaff;
+    --sys-bg-grad-3: #ffffff;
+    --sys-surface-glass: rgba(255, 255, 255, 0.75); // Frosty
+    --sys-surface-glass-dim: rgba(255, 255, 255, 0.5);
+    --sys-border: rgba(0, 0, 0, 0.08);
+    --sys-border-light: rgba(0, 0, 0, 0.04);
+    --sys-text-primary: rgba(0, 0, 0, 0.87);
+    --sys-text-secondary: rgba(0, 0, 0, 0.65);
+    --sys-text-tertiary: rgba(0, 0, 0, 0.45);
+    --sys-text-hint: rgba(0, 0, 0, 0.3);
+    --sys-scrollbar-thumb: rgba(0, 0, 0, 0.2);
+    --sys-scrollbar-track: rgba(0, 0, 0, 0.05);
+
+    // Light Airy Background
+    background: linear-gradient(-45deg, 
+      var(--sys-bg-grad-1), 
+      var(--sys-bg-grad-2), 
+      var(--sys-bg-grad-3), 
+      #f8f9ff
+    );
+    background-size: 400% 400%;
+    animation: drift 15s ease infinite;
+    color: var(--sys-text-primary);
+
+    // Light Mode Overrides for Glass
+    .glass-panel {
+        background: var(--sys-surface-glass);
+        border: 1px solid var(--sys-border);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); // softer, diffused shadow
+        color: var(--sys-text-primary);
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--sys-text-primary) !important;
+            text-shadow: none !important;
+        }
+        
+        p, span, div {
+             // color inherited usually, but force if needed
+        }
+    }
+    
+    // Mat Icon Overrides for Light Mode
+    .mat-icon {
+        color: var(--sys-text-secondary); 
+    }
+  }
 }
 
 // Global Reset
@@ -45,8 +137,13 @@ body {
 
 // Global Glass Class
 .glass-panel {
-  // Use mixin directly to avoid cross-module extend issues
   @extend %glass-panel;
+}
+
+@keyframes drift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 // Material Overrides for Glassmorphism
@@ -58,18 +155,52 @@ body {
         border: none !important;
         
         .mdc-dialog__surface {
-            background: rgba(30, 30, 30, 0.85) !important; // Dark glass
+            background: var(--sys-surface-glass) !important;
             backdrop-filter: blur(20px) !important;
             border-radius: 16px !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid var(--sys-border) !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
             overflow: hidden !important;
             padding: 0 !important;
+            color: var(--sys-text-primary) !important;
         }
     }
 }
 
+// Ensure backdrop is consistent
 .glass-dialog-backdrop {
-    background: rgba(0, 0, 0, 0.6) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
     backdrop-filter: blur(4px) !important;
+}
+
+// Global Material Menu & Select Overrides
+.mat-mdc-menu-panel, .mat-mdc-select-panel {
+    background: var(--sys-surface-glass) !important;
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--sys-border) !important;
+    color: var(--sys-text-primary) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important; // consistent shadow
+
+    .mat-mdc-menu-item, .mat-mdc-option {
+        color: var(--sys-text-primary) !important;
+        
+        &:hover, &:focus, &.mat-mdc-option-active, &.mat-mdc-option-selected {
+            background: var(--sys-border-light) !important;
+        }
+        
+        mat-icon {
+            color: var(--sys-text-secondary) !important;
+        }
+        
+        // Disabled state
+        &[disabled] {
+             color: var(--sys-text-hint) !important;
+             mat-icon { color: var(--sys-text-hint) !important; }
+        }
+    }
+    
+    // Select specific values
+    .mat-mdc-option-value {
+        color: var(--sys-text-primary) !important;
+    }
 }

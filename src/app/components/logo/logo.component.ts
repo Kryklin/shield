@@ -68,7 +68,7 @@ import { CommonModule } from '@angular/common';
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      --primary-color: #00e676; 
+      --primary-color: var(--sys-primary); 
     }
 
     .shield-logo {
@@ -101,12 +101,13 @@ import { CommonModule } from '@angular/common';
     
     :host:hover .node {
         animation-duration: 0.5s;
-        fill: #b9f6ca; /* Brighter Green */
+        fill: var(--primary-color); 
+        opacity: 0.8;
     }
     
     :host:hover .link {
         animation-duration: 0.8s;
-        stroke: #b9f6ca;
+        stroke: var(--primary-color);
         stroke-width: 2;
         opacity: 1;
     }

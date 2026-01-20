@@ -13,7 +13,7 @@
     font-size: 48px;
     height: 48px;
     width: 48px;
-    color: var(--mat-sys-tertiary);
+    color: var(--sys-primary);
     margin-bottom: 16px;
   }
 
@@ -22,11 +22,11 @@
     font-weight: 300;
     margin: 0 0 8px 0;
     letter-spacing: -0.5px;
-    color: var(--mat-sys-on-surface);
+    color: var(--sys-text-primary);
   }
 
   .subtitle {
-    color: rgba(255,255,255,0.6);
+    color: var(--sys-text-secondary);
     font-size: 1.1rem;
     margin: 0;
   }
@@ -49,6 +49,8 @@
   flex-direction: column;
   align-items: center;
   gap: 32px;
+  background: var(--sys-surface-glass);
+  border: 1px solid var(--sys-border);
 
   .ring-container {
       position: relative;
@@ -61,10 +63,11 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 0 30px rgba(0,0,0,0.3);
+          box-shadow: 0 0 30px rgba(0,0,0,0.1);
+          color: var(--sys-text-primary);
 
           .value { font-size: 2.5rem; font-weight: 700; line-height: 1; }
-          .label { font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6; margin-top: 4px; }
+          .label { font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6; margin-top: 4px; color: var(--sys-text-secondary); }
       }
   }
 
@@ -80,9 +83,9 @@
           align-items: center;
           gap: 12px;
           font-size: 1.1rem;
-          color: rgba(255,255,255,0.8);
+          color: var(--sys-text-primary);
           
-          mat-icon { color: var(--mat-sys-primary); }
+          mat-icon { color: var(--sys-primary); }
       }
 
       button { width: 100%; }
@@ -92,6 +95,8 @@
 .plans-card {
   @extend %glass-panel;
   padding: 24px;
+  background: var(--sys-surface-glass);
+  border: 1px solid var(--sys-border);
   
   .card-header-row {
     display: flex;
@@ -99,7 +104,7 @@
     justify-content: space-between;
     margin-bottom: 24px;
 
-    h3 { margin: 0; font-weight: 400; font-size: 1.2rem; }
+    h3 { margin: 0; font-weight: 400; font-size: 1.2rem; color: var(--sys-text-primary); }
   }
 
   .plans-list {
@@ -113,20 +118,21 @@
           justify-content: space-between;
           padding: 16px;
           border-radius: 8px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.05);
+          background: var(--sys-border-light);
+          border: 1px solid var(--sys-border);
           cursor: pointer;
           transition: all 0.2s ease;
+          color: var(--sys-text-secondary);
 
-          &:hover { background: rgba(255,255,255,0.06); }
-          &:focus { outline: 2px solid var(--mat-sys-primary); background: rgba(255,255,255,0.1); }
+          &:hover { background: var(--sys-border-light); border-color: var(--sys-primary-dim); }
+          &:focus { outline: 2px solid var(--sys-primary); background: var(--sys-surface-glass-dim); }
 
           &.active {
-              background: rgba(var(--mat-sys-primary-rgb), 0.1);
-              border-color: var(--mat-sys-primary);
+              background: var(--sys-primary-dim);
+              border-color: var(--sys-primary);
               
-              .plan-info .plan-name { color: var(--mat-sys-primary); font-weight: 700; }
-              .check { opacity: 1; color: var(--mat-sys-primary); }
+              .plan-info .plan-name { color: var(--sys-primary); font-weight: 700; }
+              .check { opacity: 1; color: var(--sys-primary); }
           }
           
           .plan-info {
@@ -139,7 +145,7 @@
   }
   .panel-header {
       margin-bottom: 24px;
-      h3 { margin: 0; font-weight: 400; font-size: 1.2rem; }
+      h3 { margin: 0; font-weight: 400; font-size: 1.2rem; color: var(--sys-text-primary); }
   }
 
   .sessions-list {
@@ -151,8 +157,8 @@
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           padding: 16px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.05);
+          background: var(--sys-border-light);
+          border: 1px solid var(--sys-border);
           border-radius: 8px;
           align-items: center;
           
@@ -161,8 +167,8 @@
               flex-direction: column;
               gap: 4px;
               
-              .label { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; }
-              span:not(.label) { font-size: 1rem; color: rgba(255,255,255,0.9); }
+              .label { font-size: 0.75rem; color: var(--sys-text-tertiary); letter-spacing: 0.5px; }
+              span:not(.label) { font-size: 1rem; color: var(--sys-text-primary); }
               
               &.energy {
                   span:not(.label) { font-family: monospace; font-weight: 700; }
@@ -177,6 +183,7 @@
           padding: 32px;
           opacity: 0.5;
           font-style: italic;
+          color: var(--sys-text-tertiary);
       }
   }
 }
@@ -188,8 +195,10 @@
 .health-card {
     @extend %glass-panel;
     padding: 24px;
+    background: var(--sys-surface-glass);
+    border: 1px solid var(--sys-border);
 
-    h3 { margin: 0 0 24px 0; font-weight: 400; font-size: 1.2rem; }
+    h3 { margin: 0 0 24px 0; font-weight: 400; font-size: 1.2rem; color: var(--sys-text-primary); }
 
     .health-grid {
         display: grid;
@@ -201,17 +210,17 @@
             display: flex;
             flex-direction: column;
             
-            .val { font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 4px; }
+            .val { font-size: 1.5rem; font-weight: 700; color: var(--sys-text-primary); margin-bottom: 4px; }
             .bad-val { font-size: 1.5rem; font-weight: 700; color: #ff1744; margin-bottom: 4px; }
             .text-sm { font-size: 1.1rem; opacity: 0.9; margin-top: 6px; } // Smaller for text
-            .label { font-size: 0.7rem; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+            .label { font-size: 0.7rem; letter-spacing: 1px; color: var(--sys-text-tertiary); }
         }
     }
 
     .wear-bar-container {
         .bar-bg {
             height: 8px;
-            background: rgba(255,255,255,0.1);
+            background: var(--sys-border-light);
             border-radius: 4px;
             overflow: hidden;
             margin-bottom: 8px;
@@ -227,7 +236,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.75rem;
-            color: rgba(255,255,255,0.4);
+            color: var(--sys-text-tertiary);
         }
     }
 }

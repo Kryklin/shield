@@ -38,8 +38,6 @@ export class GithubService {
   private initNativeUpdater() {
       // If we are in the browser, this will do nothing (safe)
       this.electron.onAutoUpdateStatus((event) => {
-          console.log('Native Update Status:', event);
-
           switch (event.status) {
               case 'checking':
                   this.updateStatus.set('checking');

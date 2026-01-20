@@ -8,6 +8,11 @@
   </div>
   
   <div class="window-controls">
+    <!-- Theme Toggle -->
+    <button mat-icon-button (click)="themeService.toggle()" class="theme-toggle" [matTooltip]="themeService.darkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <mat-icon>{{ themeService.darkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+    
     <!-- Admin Status -->
     <div class="admin-indicator" 
          [class.active]="isAdmin" 
@@ -78,5 +83,18 @@
             }
         </div>
     </mat-menu>
+    
+    <!-- Custom Window Controls -->
+    <div class="window-actions">
+        <button class="win-btn min" (click)="minimize()">
+            <mat-icon>remove</mat-icon>
+        </button>
+        <button class="win-btn max" (click)="toggleMaximize()">
+            <mat-icon>crop_square</mat-icon>
+        </button>
+        <button class="win-btn close" (click)="close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ import { IconsModule } from '../../modules/icons/icons-module';
 import { LogoComponent } from '../logo/logo.component';
 import { GithubService } from '../../services/github.service';
 import { ElectronService } from '../../services/electron.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-topnav',
@@ -18,7 +19,22 @@ export class TopnavComponent implements OnInit {
   @ViewChild('adminMenuTrigger') adminMenuTrigger!: MatMenuTrigger;
 
   github = inject(GithubService);
-  private electron = inject(ElectronService);
+  themeService = inject(ThemeService);
+  electron = inject(ElectronService);
+
+  // Constructor removed as signals/inject are used and ngOnInit handles init logic
+
+  minimize() {
+    this.electron.minimize();
+  }
+
+  toggleMaximize() {
+    this.electron.toggleMaximize();
+  }
+
+  close() {
+    this.electron.close();
+  }
 
   async ngOnInit() {
     this.isAdmin = await this.electron.checkAdminStatus();

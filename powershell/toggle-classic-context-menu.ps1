@@ -8,27 +8,39 @@ $KeyPath = "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\
 
 function Get-Status {
     if (Test-Path $KeyPath) {
-        return @{ enabled = $true; status = "Classic Style" }
+        return @{ 
+            enabled = $true 
+            status  = "Safe"
+            details = "Classic Context Menu is active." 
+        } | ConvertTo-Json
     }
     else {
-        return @{ enabled = $false; status = "Windows 11 Default" }
+        return @{ 
+            enabled = $false 
+            status  = "At Risk" 
+            details = "Windows 11 Default Menu is active."
+        } | ConvertTo-Json
     }
 }
 
-if ($Action -eq "Query") {
-    Get-Status | ConvertTo-Json -Compress
-}
-elseif ($Action -eq "Enable") {
-    # Enable Classic (Create Key)
+function Enable-Hardening {
     if (-not (Test-Path $KeyPath)) {
         New-Item -Path $KeyPath -Force | Out-Null
         Set-ItemProperty -Path $KeyPath -Name "(default)" -Value "" | Out-Null
     }
-    # Restart Explorer to apply? User might need to, but we won't force it blindly.
+    return @{ success = $true; message = "Classic Context Menu enabled." } | ConvertTo-Json
 }
-elseif ($Action -eq "Disable") {
-    # Restore Default (Delete Key)
+
+function Disable-Hardening {
     if (Test-Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}") {
         Remove-Item -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}" -Recurse -Force | Out-Null
     }
+    return @{ success = $true; message = "Default Context Menu restored." } | ConvertTo-Json
+}
+
+switch ($Action) {
+    "Query" { Get-Status }
+    "Enable" { Enable-Hardening }
+    "Disable" { Disable-Hardening }
+    default { Get-Status }
 }

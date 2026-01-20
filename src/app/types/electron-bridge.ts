@@ -9,11 +9,13 @@ export interface FirewallProfile {
   Enabled: boolean;
 }
 
+import { StateCache } from './state.types';
+
 export interface ShieldApi {
   getSystemStatus: () => Promise<ShieldStatus>;
   getFirewallStatus: () => Promise<FirewallProfile[]>;
   minimize: () => void;
-  maximize: () => void;
+  toggleMaximize: () => void;
   close: () => void;
   onWindowMaximizedChange: (callback: (isMaximized: boolean) => void) => void;
   runScript: (scriptName: string, args: string[], requiresAdmin?: boolean) => Promise<unknown>;
@@ -23,5 +25,8 @@ export interface ShieldApi {
   checkForUpdates: () => Promise<void>;
   quitAndInstall: () => Promise<void>;
   onAutoUpdateStatus: (callback: (status: { status: string; releaseName?: string; error?: string }) => void) => void;
+  // State Persistence
+  getStateCache: () => Promise<StateCache>;
+  saveStateCache: (state: StateCache) => Promise<boolean>;
 }
 

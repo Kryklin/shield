@@ -1,46 +1,53 @@
-import { Injectable, signal, effect, inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-
-export interface ShieldTheme {
-  name: string;
-  displayName: string;
-  primaryColor: string;
-}
+import { Injectable, signal, effect, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
+  private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
-
-  readonly availableThemes: ShieldTheme[] = [
-    { name: 'void', displayName: 'Void', primaryColor: '#ffffff' },
-  ];
-
-  activeTheme = signal<ShieldTheme>(this.availableThemes[0]);
+  
+  // Default to dark mode
+  darkMode = signal(true);
 
   constructor() {
-    effect(() => {
-      const theme = this.activeTheme();
-      this.applyTheme(theme.name);
-    });
-  }
-
-  setTheme(themeName: string) {
-    const theme = this.availableThemes.find(t => t.name === themeName);
-    if (theme) {
-      this.activeTheme.set(theme);
+    if (isPlatformBrowser(this.platformId)) {
+        this.loadTheme();
     }
+
+    // Effect to apply class to body whenever signal changes
+    effect(() => {
+        if (isPlatformBrowser(this.platformId)) {
+            const isDark = this.darkMode();
+            const body = this.document.body;
+            
+            if (isDark) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+            }
+            
+            // Persist to storage
+            localStorage.setItem('shield-theme', isDark ? 'dark' : 'light');
+        }
+    });
   }
 
-  private applyTheme(themeName: string) {
-    // Remove all known theme classes
-    const classList = this.document.body.classList;
-    this.availableThemes.forEach(t => {
-      classList.remove(`theme-${t.name}`);
-    });
-    
-    // Add new theme class
-    classList.add(`theme-${themeName}`);
+  toggle() {
+    this.darkMode.update(v => !v);
+  }
+
+  private loadTheme() {
+    const stored = localStorage.getItem('shield-theme');
+    if (stored) {
+        this.darkMode.set(stored === 'dark');
+    } else {
+        // Check system preference if no stored value
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        this.darkMode.set(prefersDark);
+    }
   }
 }

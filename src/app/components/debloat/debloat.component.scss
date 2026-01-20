@@ -13,7 +13,7 @@
     font-size: 48px;
     height: 48px;
     width: 48px;
-    color: var(--mat-sys-tertiary);
+    color: var(--sys-primary); // Use primary
     margin-bottom: 16px;
   }
 
@@ -22,10 +22,11 @@
     font-weight: 300;
     margin: 0 0 8px 0;
     letter-spacing: -0.5px;
+    color: var(--sys-text-primary);
   }
 
   .subtitle {
-    color: rgba(255,255,255,0.6);
+    color: var(--sys-text-secondary);
     font-size: 1.1rem;
     margin: 0;
   }
@@ -35,13 +36,15 @@
   @extend %glass-panel;
   padding: 0; // Seamless rows
   overflow: hidden;
+  background: var(--sys-surface-glass);
+  border: 1px solid var(--sys-border);
 
   .module-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid var(--sys-border);
     transition: background 0.2s ease;
 
     &:last-child {
@@ -49,12 +52,12 @@
     }
 
     &:hover {
-      background: rgba(255,255,255,0.03);
+      background: var(--sys-border-light);
     }
 
     &.enabled {
-      background: rgba(var(--mat-sys-tertiary-rgb), 0.05);
-      border-left: 4px solid var(--mat-sys-tertiary);
+      background: var(--sys-border-light);
+      border-left: 4px solid var(--sys-primary);
       padding-left: 20px; // Offset border width
     }
 
@@ -67,7 +70,7 @@
         font-size: 28px;
         width: 28px;
         height: 28px;
-        color: var(--mat-sys-secondary);
+        color: var(--sys-text-tertiary);
         
         &.safe { color: #4caf50; }
       }
@@ -81,12 +84,12 @@
         margin: 0 0 8px 0;
         font-size: 1.1rem;
         font-weight: 500;
-        color: var(--mat-sys-on-surface);
+        color: var(--sys-text-primary);
       }
 
       p {
         margin: 0;
-        color: rgba(255,255,255,0.6);
+        color: var(--sys-text-secondary);
         font-size: 0.95rem;
         line-height: 1.5;
       }

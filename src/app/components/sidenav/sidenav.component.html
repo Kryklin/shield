@@ -6,8 +6,10 @@
     <mat-nav-list>
       <!-- Dashboard is always top-level -->
       <a mat-list-item class="dashboard-item" routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
+        <div class="dashboard-content-wrapper">
+            <mat-icon>dashboard</mat-icon>
+            <span>Dashboard</span>
+        </div>
       </a>
 
       <mat-accordion displayMode="flat" multi>

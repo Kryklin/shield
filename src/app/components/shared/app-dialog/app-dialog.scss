@@ -4,7 +4,7 @@
     padding: 24px;
     background: #1a1a1a; // Fallback
     background: rgba(20, 20, 20, 0.95);
-    color: white;
+    color: var(--sys-text-primary);
     min-width: 350px;
     max-width: 500px;
     
@@ -27,7 +27,7 @@
         .message {
             font-size: 1rem;
             line-height: 1.5;
-            color: rgba(255,255,255,0.7);
+            color: var(--sys-text-secondary);
             margin: 0 0 16px 0;
         }
 

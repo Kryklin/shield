@@ -1,6 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { ElectronService } from './electron.service';
 import { HARDENING_MODULES } from '../config/hardening-modules';
+import { StateService } from './state.service';
 
 export interface HardeningStatus {
   enabled: boolean;
@@ -31,6 +32,7 @@ export interface HardeningProfile {
 })
 export class HardeningService {
   private electron = inject(ElectronService);
+  private stateService = inject(StateService);
   
   modules = signal<HardeningModule[]>([]);
   profiles = signal<HardeningProfile[]>([]);
@@ -100,56 +102,42 @@ export class HardeningService {
       
       localStorage.setItem('shield_profiles', JSON.stringify(userProfiles));
       
-      this.loadProfiles(); 
+      this.loadProfiles(); // Refresh
       this.activeProfileId.set(newProfile.id);
       return { success: true };
   }
 
-  captureCurrentSettings(): Record<string, boolean> {
+  private captureCurrentSettings(): Record<string, boolean> {
       const settings: Record<string, boolean> = {};
       this.modules().forEach(m => {
-          if (m.state) {
-              // We want to capture the "Hardened" status.
-              // If state.enabled is FALSE, it is hardened. (Value=1).
-              settings[m.id] = !m.state.enabled; 
+          if (m.state?.enabled) {
+              settings[m.id] = true;
           }
       });
       return settings;
   }
 
-  areSettingsEqual(s1: Record<string, boolean>, s2: Record<string, boolean>): boolean {
-    const allModules = this.modules();
-    
-    const normalize = (s: Record<string, boolean>) => {
-        const n: Record<string, boolean> = {};
-        allModules.forEach(m => n[m.id] = !!s[m.id]);
-        return n;
-    };
-
-    const n1 = normalize(s1);
-    const n2 = normalize(s2);
-    
-    return allModules.every(m => n1[m.id] === n2[m.id]);
+  private areSettingsEqual(a: Record<string, boolean>, b: Record<string, boolean>): boolean {
+      const keysA = Object.keys(a).sort();
+      const keysB = Object.keys(b).sort();
+      
+      if (keysA.length !== keysB.length) return false;
+      return keysA.every((key, i) => key === keysB[i]);
   }
 
   async applyProfile(profileId: string) {
       const profile = this.profiles().find(p => p.id === profileId);
       if (!profile) return;
       
-      this.activeProfileId.set(profileId);
+      this.activeProfileId.set(profileId); // Optimistic set
       
       const mods = this.modules();
       for (const mod of mods) {
-          const shouldBeHardened = !!profile.settings[mod.id];
-          const currentRisk = mod.state?.enabled; 
+          const shouldEnabled = !!profile.settings[mod.id];
+          const isEnabled = mod.state?.enabled; 
           
-          // Target Risk:
-          // Hardened(true) -> Risk(false)
-          // Hardened(false) -> Risk(true)
-          const targetRisk = !shouldBeHardened;
-          
-          if (currentRisk !== targetRisk) {
-              await this.toggleModule(mod.id, targetRisk);
+          if (shouldEnabled !== isEnabled) {
+              await this.toggleModule(mod.id, shouldEnabled);
           }
       }
   }
@@ -158,10 +146,25 @@ export class HardeningService {
     const mods = this.modules();
     
     // Process in parallel
-    const promises = mods.map(async (mod, index) => {
+    mods.map(async (mod, index) => {
+      // 1. Try Cache First (Instant Load)
+      const cached = this.stateService.getState('hardening-' + mod.id);
+      if (cached) {
+          this.modules.update(current => {
+              const updated = [...current];
+              updated[index] = { ...updated[index], state: cached as HardeningStatus, loading: false };
+              return updated;
+          });
+          return;
+      }
+      
+      // 2. Fallback to System Query
       try {
         const result = await this.electron.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
         
+        // Update Cache
+        this.stateService.updateState('hardening-' + mod.id, result);
+
         this.modules.update(current => {
           const updated = [...current];
           updated[index] = { 
@@ -181,7 +184,7 @@ export class HardeningService {
       }
     });
     
-    await Promise.all(promises);
+    // We let them resolve independently for progressive loading
   }
 
   async toggleModule(moduleId: string, enable: boolean) {
@@ -189,6 +192,7 @@ export class HardeningService {
     const index = mods.findIndex(m => m.id === moduleId);
     if (index === -1) return;
 
+    // Optimistic Update
     this.modules.update(current => {
       const updated = [...current];
       updated[index] = { ...updated[index], isProcessing: true };
@@ -203,6 +207,9 @@ export class HardeningService {
       
       const result = await this.electron.runScript(mod.script, ['-Action', 'Query']) as HardeningStatus;
       
+      // Update Cache
+      this.stateService.updateState('hardening-' + mod.id, result);
+
       this.modules.update(current => {
         const updated = [...current];
         updated[index] = { 

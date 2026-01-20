@@ -13,7 +13,7 @@
     font-size: 48px;
     height: 48px;
     width: 48px;
-    color: var(--mat-sys-tertiary);
+    color: var(--sys-primary);
     margin-bottom: 16px;
   }
 
@@ -22,11 +22,11 @@
     font-weight: 300;
     margin: 0 0 8px 0;
     letter-spacing: -0.5px;
-    color: var(--mat-sys-on-surface);
+    color: var(--sys-text-primary);
   }
 
   .subtitle {
-    color: rgba(255,255,255,0.6);
+    color: var(--sys-text-secondary);
     font-size: 1.1rem;
     margin: 0;
   }
@@ -43,18 +43,20 @@
     padding: 24px;
     display: flex;
     justify-content: space-around;
+    background: var(--sys-surface-glass);
+    border: 1px solid var(--sys-border);
     
     .gw-stat {
         display: flex;
         align-items: center;
         gap: 16px;
         
-        mat-icon { font-size: 32px; width: 32px; height: 32px; color: var(--mat-sys-primary); opacity: 0.8; }
+        mat-icon { font-size: 32px; width: 32px; height: 32px; color: var(--sys-primary); opacity: 0.8; }
         
         .gw-info {
             display: flex; flex-direction: column;
-            .label { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.5; margin-bottom: 4px; }
-            .val { font-size: 1.5rem; font-weight: 700; &.slow { color: #ff1744; } }
+            .label { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.5; margin-bottom: 4px; color: var(--sys-text-tertiary); }
+            .val { font-size: 1.5rem; font-weight: 700; color: var(--sys-text-primary); &.slow { color: #ff1744; } }
         }
     }
 }
@@ -62,26 +64,28 @@
 .adapter-card {
     @extend %glass-panel;
     padding: 24px;
+    background: var(--sys-surface-glass);
+    border: 1px solid var(--sys-border);
     
     .adapter-header {
         display: flex;
         align-items: center;
         gap: 16px;
         margin-bottom: 24px;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid var(--sys-border);
         padding-bottom: 16px;
 
         .nic-icon {
             font-size: 32px;
             width: 32px;
             height: 32px;
-            color: var(--mat-sys-secondary);
+            color: var(--sys-text-secondary);
         }
 
         .nic-info {
             flex: 1;
-            h3 { margin: 0; font-size: 1.2rem; }
-            .desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+            h3 { margin: 0; font-size: 1.2rem; color: var(--sys-text-primary); }
+            .desc { font-size: 0.85rem; color: var(--sys-text-secondary); }
         }
 
         .status-badge {
@@ -113,27 +117,27 @@
         .stat {
             display: flex;
             flex-direction: column;
-            label { font-size: 0.7rem; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
-            .val { font-size: 1.1rem; font-weight: 500; }
+            label { font-size: 0.7rem; letter-spacing: 1px; color: var(--sys-text-tertiary); margin-bottom: 4px; }
+            .val { font-size: 1.1rem; font-weight: 500; color: var(--sys-text-primary); }
         }
     }
 
     .dns-section {
-        background: rgba(0,0,0,0.2);
+        background: var(--sys-border-light);
         padding: 16px;
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: space-between;
 
-        h4 { margin: 0 0 8px 0; color: rgba(255,255,255,0.8); display: none; } // Hidden, handled by layout
+        h4 { margin: 0 0 8px 0; color: var(--sys-text-secondary); display: none; } // Hidden, handled by layout
 
         .current-dns {
             display: flex;
             align-items: center;
             gap: 12px;
-            mat-icon { color: var(--mat-sys-primary); }
-            span { font-family: monospace; font-size: 1rem; }
+            mat-icon { color: var(--sys-primary); }
+            span { font-family: monospace; font-size: 1rem; color: var(--sys-text-primary); }
         }
 
         .dns-actions {
@@ -141,7 +145,7 @@
             align-items: center;
             gap: 12px;
             
-            .menu-sub { margin-left: auto; opacity: 0.5; font-size: 0.8rem; padding-left: 12px;}
+            .menu-sub { margin-left: auto; opacity: 0.5; font-size: 0.8rem; padding-left: 12px; color: var(--sys-text-tertiary); }
         }
     }
 }
@@ -150,6 +154,8 @@
     @extend %glass-panel;
     padding: 24px;
     border-left: 4px solid #ff1744; // Warning red
+    background: var(--sys-surface-glass);
+    border: 1px solid var(--sys-border);
 
     .repair-content {
         display: flex;
@@ -157,8 +163,8 @@
         justify-content: space-between;
 
         .repair-text {
-             h3 { margin: 0 0 4px 0; font-size: 1.2rem; }
-             p { margin: 0; opacity: 0.7; }
+             h3 { margin: 0 0 4px 0; font-size: 1.2rem; color: var(--sys-text-primary); }
+             p { margin: 0; opacity: 0.7; color: var(--sys-text-secondary); }
         }
     }
 }

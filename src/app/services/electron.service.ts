@@ -45,6 +45,19 @@ export class ElectronService {
     this._api?.relaunchAsAdmin();
   }
 
+  // Window Controls
+  minimize() {
+    this._api?.minimize();
+  }
+
+  toggleMaximize() {
+    this._api?.toggleMaximize();
+  }
+
+  close() {
+    this._api?.close();
+  }
+
   // Auto Update
   checkForUpdates() {
     this._api?.checkForUpdates();

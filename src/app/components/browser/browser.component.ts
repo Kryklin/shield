@@ -90,9 +90,9 @@ import { UiService } from '../../services/ui.service';
     @use '../../styles/glass';
     .browser-container { padding: 40px; max-width: 1200px; margin: 0 auto; }
     .header { display: flex; align-items: center; margin-bottom: 40px; 
-              .header-icon { font-size: 48px; height: 48px; width: 48px; margin-right: 24px; color: var(--mat-sys-tertiary); }
-              .header-text h1 { margin: 0 0 8px 0; font-size: 2.5rem; font-weight: 300; }
-              .header-text p { margin: 0; opacity: 0.6; font-size: 1.1rem; } }
+              .header-icon { font-size: 48px; height: 48px; width: 48px; margin-right: 24px; color: var(--sys-primary); }
+              .header-text h1 { margin: 0 0 8px 0; font-size: 2.5rem; font-weight: 300; color: var(--sys-text-primary); }
+              .header-text p { margin: 0; opacity: 0.6; font-size: 1.1rem; color: var(--sys-text-secondary); } }
     
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
     
@@ -101,30 +101,32 @@ import { UiService } from '../../services/ui.service';
         padding: 32px;
         display: flex; flex-direction: column; align-items: center; text-align: center;
         transition: transform 0.2s;
+        background: var(--sys-surface-glass);
+        border: 1px solid var(--sys-border);
         
-        &:hover { transform: translateY(-4px); }
+        &:hover { transform: translateY(-4px); background: var(--sys-border-light); }
 
         .card-header { margin-bottom: 24px; 
                        mat-icon { font-size: 64px; height: 64px; width: 64px; margin-bottom: 16px; opacity: 0.9; }
-                       h2 { margin: 0; font-weight: 400; } }
+                       h2 { margin: 0; font-weight: 400; color: var(--sys-text-primary); } }
 
         .features { flex: 1; width: 100%; margin-bottom: 32px;
                     ul { list-style: none; padding: 0; margin: 0; text-align: left; }
-                    li { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-                         mat-icon { margin-right: 12px; font-size: 18px; height: 18px; width: 18px; opacity: 0.7; } } }
+                    li { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--sys-border); color: var(--sys-text-secondary);
+                         mat-icon { margin-right: 12px; font-size: 18px; height: 18px; width: 18px; opacity: 0.7; color: var(--sys-text-tertiary); } } }
 
         .status { 
-            margin-bottom: 24px; padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,0.05);
+            margin-bottom: 24px; padding: 8px 16px; border-radius: 20px; background: var(--sys-border-light);
             font-size: 0.8rem; letter-spacing: 1px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-            color: rgba(255,255,255,0.5);
+            color: var(--sys-text-secondary);
             
-            &.active { background: rgba(var(--mat-sys-primary-rgb), 0.2); color: var(--mat-sys-primary); }
+            &.active { background: var(--sys-primary-dim); color: var(--sys-primary); }
             mat-icon { font-size: 16px; height: 16px; width: 16px; }
         }
         
         button { width: 100%; padding: 24px 0; font-letter-spacing: 1px; }
 
-        &.chrome .card-header mat-icon { color: #fe554d; } // fake chrome color or just use theme
+        &.chrome .card-header mat-icon { color: #fe554d; } 
         &.edge .card-header mat-icon { color: #0078d7; }
         &.firefox .card-header mat-icon { color: #ff9500; }
     }

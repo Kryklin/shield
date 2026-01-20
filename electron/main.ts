@@ -48,12 +48,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      color: '#00000000', // Transparent background to blend with topnav
-      symbolColor: '#ffffff', // White icons
-      height: 48 // Match topnav height
-    },
+    frame: false, // Fully custom window, no native controls or overlay
     webPreferences: {
       // Since this runs from dist/electron/main.js, preload is in the same dir
       preload: path.join(__dirname, 'preload.js'),
@@ -137,6 +132,35 @@ ipcMain.handle('relaunch-as-admin', () => {
         app.quit();
       }
   });
+});
+
+// State Persistence
+import * as fs from 'fs';
+
+ipcMain.handle('get-state-cache', async () => {
+    const userDataPath = app.getPath('userData');
+    const statePath = path.join(userDataPath, 'state.json');
+    try {
+        if (fs.existsSync(statePath)) {
+            const data = fs.readFileSync(statePath, 'utf-8');
+            return JSON.parse(data);
+        }
+    } catch (error) {
+        console.error('Failed to read state cache:', error);
+    }
+    return {};
+});
+
+ipcMain.handle('save-state-cache', async (_event, state: any) => {
+    const userDataPath = app.getPath('userData');
+    const statePath = path.join(userDataPath, 'state.json');
+    try {
+        fs.writeFileSync(statePath, JSON.stringify(state, null, 2), 'utf-8');
+        return true;
+    } catch (error) {
+        console.error('Failed to write state cache:', error);
+        return false;
+    }
 });
 
 ipcMain.on('window-minimize', () => {

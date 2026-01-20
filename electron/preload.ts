@@ -4,7 +4,7 @@ contextBridge.exposeInMainWorld('shieldApi', {
   getSystemStatus: () => ipcRenderer.invoke('get-system-status'),
   getFirewallStatus: () => ipcRenderer.invoke('get-firewall-status'),
   minimize: () => ipcRenderer.send('window-minimize'),
-  maximize: () => ipcRenderer.send('window-maximize'),
+  toggleMaximize: () => ipcRenderer.send('window-maximize'),
   close: () => ipcRenderer.send('window-close'),
   onWindowMaximizedChange: (callback: (isMaximized: boolean) => void) => 
     ipcRenderer.on('window-maximized-change', (_event, value) => callback(value)),
@@ -16,4 +16,7 @@ contextBridge.exposeInMainWorld('shieldApi', {
   quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
   onAutoUpdateStatus: (callback: (status: { status: string; releaseName?: string; error?: string }) => void) => 
     ipcRenderer.on('auto-update-status', (_event, value) => callback(value)),
+  // State Persistence
+  getStateCache: () => ipcRenderer.invoke('get-state-cache'),
+  saveStateCache: (state: any) => ipcRenderer.invoke('save-state-cache', state),
 });

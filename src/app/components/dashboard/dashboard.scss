@@ -2,18 +2,16 @@
 
 .dashboard-container {
   padding: 24px 48px 48px 48px; // Added bottom padding for scroll space
-  // height: calc(100vh - 140px); // REMOVED: Let content flow
   box-sizing: border-box;
   max-width: 1400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  // overflow: hidden; // REMOVED: Let parent scroll handle it
   animation: fadeIn 0.5s ease-out;
   
   // Subtle background gradient for depth
-  background: radial-gradient(circle at 50% 0%, rgba(41, 121, 255, 0.05) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 0%, var(--sys-primary-dim) 0%, transparent 70%);
 }
 
 // Threat Intelligence Card (Hero)
@@ -22,19 +20,21 @@
   overflow: hidden;
   padding: 40px 60px;
   cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--sys-border);
   transition: all 0.3s ease;
   min-height: 220px;
   display: flex;
   align-items: center;
+  background: var(--sys-surface-glass);
+  border-radius: 16px;
 
   // Hover Effect
   &:hover {
-      background: rgba(255,255,255,0.03);
-      border-color: rgba(255,255,255,0.2);
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      background: var(--sys-border-light);
+      border-color: var(--sys-text-tertiary);
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
       
-      .outer-ring { border-color: rgba(255,255,255,0.2); }
+      .outer-ring { border-color: var(--sys-text-tertiary); }
   }
 
   // Scanning Animation
@@ -43,7 +43,7 @@
       top: 0; left: -100%;
       width: 50%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      background: linear-gradient(90deg, transparent, var(--sys-border), transparent);
       transform: skewX(-20deg);
       animation: scan 6s linear infinite;
       pointer-events: none;
@@ -53,8 +53,8 @@
   .grid-overlay {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-image: linear-gradient(var(--sys-border-light) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sys-border-light) 1px, transparent 1px);
       background-size: 40px 40px;
       opacity: 0.3;
       pointer-events: none;
@@ -79,7 +79,7 @@
           position: absolute;
           width: 100%; height: 100%;
           border-radius: 50%;
-          border: 2px dashed rgba(255,255,255,0.1);
+          border: 2px dashed var(--sys-border);
           animation: spin 20s linear infinite;
       }
 
@@ -100,8 +100,8 @@
           text-align: center;
           position: absolute; // Center strictly
           z-index: 2;
-          .score { font-size: 3rem; font-weight: 200; line-height: 1; text-shadow: 0 0 20px currentColor; margin-bottom: 4px; }
-          .label { font-size: 0.6rem; letter-spacing: 2px; opacity: 0.6; font-weight: 700; color: white; }
+          .score { font-size: 3rem; font-weight: 200; line-height: 1; text-shadow: 0 0 20px currentColor; margin-bottom: 4px; color: var(--sys-text-primary); }
+          .label { font-size: 0.6rem; letter-spacing: 2px; opacity: 0.6; font-weight: 700; color: var(--sys-text-secondary); }
       }
   }
 
@@ -133,7 +133,7 @@
           font-weight: 300;
           margin: 0 0 32px 0;
           line-height: 1.2;
-          color: rgba(255,255,255,0.9);
+          color: var(--sys-text-primary);
           max-width: 800px;
       }
 
@@ -144,11 +144,11 @@
           
           .stat-item {
               display: flex; flex-direction: column;
-              .val { font-size: 1.25rem; font-weight: 500; color: white; line-height: 1; margin-bottom: 4px; }
-              .lbl { font-size: 0.7rem; letter-spacing: 1px; color: rgba(255,255,255,0.4); font-weight: 700; }
+              .val { font-size: 1.25rem; font-weight: 500; color: var(--sys-text-primary); line-height: 1; margin-bottom: 4px; }
+              .lbl { font-size: 0.7rem; letter-spacing: 1px; color: var(--sys-text-tertiary); font-weight: 700; }
           }
           
-          .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); }
+          .divider { width: 1px; height: 24px; background: var(--sys-border); }
       }
   }
 }
@@ -173,19 +173,21 @@
 
 // System Specs Card
 .specs-card {
-    @extend %glass-panel;
+    @extend %glass-panel; // Ensure %glass-panel in styles.scss uses var(--sys-*) now or we override here
     padding: 32px 40px;
     margin-bottom: 16px; 
     flex-shrink: 0;
     min-height: 250px; // Reserve space for content to prevent CLS
+    background: var(--sys-surface-glass) !important; // Force variable usage
+    border: 1px solid var(--sys-border) !important;
 
     .card-header {
         display: flex;
         align-items: center;
         gap: 16px;
         margin-bottom: 24px;
-        color: var(--mat-sys-tertiary);
-        opacity: 0.8;
+        color: var(--sys-primary); // Use primary (Red/Blue)
+        opacity: 0.9;
         
         mat-icon { font-size: 24px; width: 24px; height: 24px; }
         h3 { margin: 0; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
@@ -203,14 +205,14 @@
 
             .label { 
                 font-size: 0.7rem; 
-                color: rgba(255,255,255,0.3); 
+                color: var(--sys-text-tertiary); 
                 letter-spacing: 1px; 
                 font-weight: 700; 
                 text-transform: uppercase;
             }
             .value { 
                 font-size: 1.1rem; 
-                color: rgba(255,255,255,0.9); 
+                color: var(--sys-text-primary); 
                 font-weight: 400; 
                 white-space: nowrap;
                 overflow: hidden;
@@ -226,7 +228,7 @@
     // Skeleton Styles
     .skeleton-line {
         height: 16px;
-        background: rgba(255,255,255,0.05);
+        background: var(--sys-border-light);
         border-radius: 4px;
         position: relative;
         overflow: hidden;
@@ -237,7 +239,7 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             transform: translateX(-100%);
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background: linear-gradient(90deg, transparent, var(--sys-border), transparent);
             animation: shimmer 1.5s infinite;
         }
 
@@ -255,16 +257,9 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 24px;
-    // flex: 1; // Removed
-    // min-height: 0; // Removed
-    // overflow-y: auto; // Removed
     padding-bottom: 8px; 
         
-    // Custom Scrollbar
-    // &::-webkit-scrollbar { width: 0; } // Removed
-
     .widget-card {
-        @extend %glass-panel;
         padding: 24px;
         display: flex;
         flex-direction: column;
@@ -275,12 +270,14 @@
         min-height: 160px; // Increased slightly to prevent minor shifts
         transition: transform 0.2s ease, background 0.2s;
         cursor: pointer;
-        border: 1px solid rgba(255,255,255,0.05);
+        background: var(--sys-surface-glass);
+        border: 1px solid var(--sys-border);
+        border-radius: 16px;
 
         &:hover {
             transform: translateY(-4px);
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(255,255,255,0.1);
+            background: var(--sys-border-light);
+            border-color: var(--sys-text-tertiary);
         }
 
         .widget-header {
@@ -290,25 +287,25 @@
             margin-bottom: 16px;
             
             mat-icon { 
-                color: rgba(255,255,255,0.3); // Dim icon
-                &.secure { color: #00e676; opacity: 0.8; }
-                &.risk { color: #ff1744; opacity: 0.8; }
+                color: var(--sys-text-hint);
+                &.secure { color: #00e676; opacity: 0.9; }
+                &.risk { color: #ff1744; opacity: 0.9; }
             }
-            h3 { margin: 0; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+            h3 { margin: 0; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--sys-text-tertiary); }
         }
 
         .widget-value {
             font-size: 1.8rem;
             font-weight: 500;
-            color: white;
+            color: var(--sys-text-primary);
             margin-bottom: 4px;
 
-            &.frozen { color: #2979ff; }
+            &.frozen { color: var(--sys-primary); }
         }
 
         .widget-sub {
             font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
+            color: var(--sys-text-secondary);
         }
 
         &.battery-card {

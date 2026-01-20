@@ -1,6 +1,6 @@
 {
   "name": "shield",
-  "version": "0.0.10",
+  "version": "1.0.0",
   "productName": "Shield",
   "main": "dist/electron/main.js",
   "description": "System Hardening Interface for Enhanced Logical Defense",

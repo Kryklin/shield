@@ -7,19 +7,33 @@ $ValueName = "VerboseStatus"
 
 function Get-Status {
     $val = Get-ItemProperty -Path $KeyPath -Name $ValueName -ErrorAction SilentlyContinue
-    if ($val -and $val.$ValueName -eq 1) {
-        return @{ enabled = $true; status = "Verbose Messages On" }
-    }
-    return @{ enabled = $false; status = "Standard Messages" }
+    $isEnabled = ($val -and $val.$ValueName -eq 1)
+
+    $status = if ($isEnabled) { "Safe" } else { "At Risk" }
+    
+    return @{
+        enabled = $isEnabled
+        status  = $status
+        details = if ($isEnabled) { "Verbose messages enabled." } else { "Standard messages only." }
+    } | ConvertTo-Json
 }
 
-if ($Action -eq "Query") {
-    Get-Status | ConvertTo-Json -Compress
-}
-elseif ($Action -eq "Enable") {
+function Enable-Hardening {
     if (-not (Test-Path $KeyPath)) { New-Item -Path $KeyPath -Force | Out-Null }
     Set-ItemProperty -Path $KeyPath -Name $ValueName -Value 1 -Type DWord | Out-Null
+    return @{ success = $true; message = "Verbose status enabled." } | ConvertTo-Json
 }
-elseif ($Action -eq "Disable") {
-    Set-ItemProperty -Path $KeyPath -Name $ValueName -Value 0 -Type DWord | Out-Null
+
+function Disable-Hardening {
+    if (Test-Path $KeyPath) {
+        Set-ItemProperty -Path $KeyPath -Name $ValueName -Value 0 -Type DWord | Out-Null
+    }
+    return @{ success = $true; message = "Verbose status disabled." } | ConvertTo-Json
+}
+
+switch ($Action) {
+    "Query" { Get-Status }
+    "Enable" { Enable-Hardening }
+    "Disable" { Disable-Hardening }
+    default { Get-Status }
 }

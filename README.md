@@ -6,8 +6,8 @@
 
 <br><br>
 
-![Version](https://img.shields.io/badge/Version-0.0.10-orange?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Beta-yellow?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.0.0-green?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Stable-brightgreen?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -19,9 +19,6 @@
 
 ---
 
-> [!NOTE]
-> **BETA RELEASE**: This project is in Beta (v0.0.10). Core features are stable, but active development is ongoing.
-
 ## 🛡️ Overview
 
 **S.H.I.E.L.D.** (System Hardening Interface for Enhanced Logical Defense) is a high-performance Windows security hardening and system optimization suite. Built using the deep system integration of **PowerShell** and the modern desktop experience of **Electron**, S.H.I.E.L.D. provides a "Lockdown-as-a-Service" interface to fully secure any Windows environment.
@@ -29,10 +26,11 @@
 ## ✨ Key Features
 
 - **🔒 Ultimate Hardening**: One-click lockdown of security vulnerabilities, registry hardening, and firewall optimization.
+- **🚀 Instant Load Technology**: Persistent JSON state caching ensures near-instant startup for hardening modules.
+- **🌗 Dark / Light Mode**: Beautiful glassmorphism UI with a dynamic red (stealth) and blue (corporate) theme toggle.
 - **🚀 Auto-Updating**: Seamless background updates via GitHub Releases.
 - **🛡️ Admin Mode**: Smart privilege detection with "Relaunch as Admin" capability.
 - **🧹 System Decluttering**: Remove telemetry, bloatware, and unnecessary background services.
-- **💎 Glassmorphism UI**: A stunning "Pro" aesthetics interface with real-time blur/frost effects and fluid animations.
 - **⚡ Real-time Telemetry**: Live monitoring of system security score and threat level.
 
 ## 🛠️ Architecture
